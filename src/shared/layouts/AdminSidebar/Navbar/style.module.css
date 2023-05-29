@@ -1,0 +1,11 @@
+.active {
+  background-color: var(--body-color);
+  color: var(--first-color) !important;
+}
+
+.navlink {
+  display: block;
+  color: var(--body-color);
+  text-decoration: none;
+  margin: 0.5rem;
+}

@@ -1,0 +1,8 @@
+.body {
+  background-color: var(--first-color) !important;
+  display: flex;
+  flex-direction: column;
+  padding: 3rem 0;
+  align-items: center;
+  position: relative;
+}
