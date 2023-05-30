@@ -10,24 +10,22 @@ import {
 function App() {
   return (
     <>
-      <div className="app-container">
-        <Router>
-          <Routes>
-            <>
-              <Route path="/" element={<Navigate to="/admin/dashboard" />} />
-              {routersConfig.routes.map((route) => {
-                return (
-                  <Route
-                    key={route.name}
-                    path={route.url}
-                    element={route.component}
-                  />
-                );
-              })}
-            </>
-          </Routes>
-        </Router>
-      </div>
+      <Router>
+        <Routes>
+          <>
+            <Route path="/" element={<Navigate to="/admin/dashboard" />} />
+            {routersConfig.routes.map((route) => {
+              return (
+                <Route
+                  key={route.name}
+                  path={route.url}
+                  element={route.component}
+                />
+              );
+            })}
+          </>
+        </Routes>
+      </Router>
     </>
   );
 }

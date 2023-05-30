@@ -28,9 +28,8 @@ const AddProject = () => {
       assignTo: [],
       boards: [],
       properties: [],
-      filters: [],
-      mode: "",
-      sortBy: [],
+      tags: [],
+      dueDate: null,
     };
 
     dispatch(addNewProject(project));
