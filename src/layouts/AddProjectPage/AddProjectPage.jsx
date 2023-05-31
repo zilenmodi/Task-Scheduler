@@ -152,7 +152,7 @@ const AddProjectPage = () => {
 
   const onFinishForm = (values) => {
     const newProject = {
-      projectid: nanoid(),
+      projectId: nanoid(),
       projectName: values.projectName,
       createBy: "Zilen Modi",
       createAt: new Date().toString(),
@@ -268,6 +268,13 @@ const AddProjectPage = () => {
                 style={{ marginTop: "1rem" }}
               >
                 Create
+              </Button>
+              <Button
+                onClick={() => navigate("/admin/dashboard")}
+                htmlType="submit"
+                style={{ marginTop: "1rem", marginLeft: "1rem" }}
+              >
+                Back
               </Button>
             </Form.Item>
           </Form>
