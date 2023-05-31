@@ -93,6 +93,13 @@ const ProjectsTable = () => {
       title: "Priority",
       key: "priority",
       dataIndex: "priority",
+      filters: [
+        { text: "High", value: "High" },
+        { text: "Medium", value: "Medium" },
+        { text: "Low", value: "Low" },
+        { text: "None", value: "None" },
+      ],
+      onFilter: (value, record) => record.priority === value,
       render: (_, { priority }) => {
         let color = "blue";
         switch (priority) {
