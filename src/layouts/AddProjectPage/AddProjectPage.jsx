@@ -16,56 +16,56 @@ import { useDispatch } from "react-redux";
 import { addNewProject } from "../../redux/projectsSlice/projectsSlice";
 import { useNavigate } from "react-router";
 
-const employessOptions = [
-  {
-    label: "Vivek",
-    value: "Vivek",
-  },
-  {
-    label: "Zilen",
-    value: "Zilen",
-  },
-  {
-    label: "Abhishek",
-    value: "Abhishek",
-  },
-  {
-    label: "Ritesh",
-    value: "Ritesh",
-  },
-  {
-    label: "Honey",
-    value: "Honey",
-  },
-  {
-    label: "Kashyap",
-    value: "Kashyap",
-  },
-  {
-    label: "Vanshita",
-    value: "Vanshita",
-  },
-  {
-    label: "Prince",
-    value: "Prince",
-  },
-  {
-    label: "Gunjan",
-    value: "Gunjan",
-  },
-  {
-    label: "Harsh",
-    value: "Harsh",
-  },
-  {
-    label: "Jupin",
-    value: "Jupin",
-  },
-  {
-    label: "Vatsal",
-    value: "Vatsal",
-  },
-];
+// const employessOptions = [
+//   {
+//     label: "Vivek",
+//     value: "Vivek",
+//   },
+//   {
+//     label: "Zilen",
+//     value: "Zilen",
+//   },
+//   {
+//     label: "Abhishek",
+//     value: "Abhishek",
+//   },
+//   {
+//     label: "Ritesh",
+//     value: "Ritesh",
+//   },
+//   {
+//     label: "Honey",
+//     value: "Honey",
+//   },
+//   {
+//     label: "Kashyap",
+//     value: "Kashyap",
+//   },
+//   {
+//     label: "Vanshita",
+//     value: "Vanshita",
+//   },
+//   {
+//     label: "Prince",
+//     value: "Prince",
+//   },
+//   {
+//     label: "Gunjan",
+//     value: "Gunjan",
+//   },
+//   {
+//     label: "Harsh",
+//     value: "Harsh",
+//   },
+//   {
+//     label: "Jupin",
+//     value: "Jupin",
+//   },
+//   {
+//     label: "Vatsal",
+//     value: "Vatsal",
+//   },
+// ];
 
 const priorityOptions = [
   {
@@ -139,7 +139,7 @@ const technologiesOptions = [
   { label: "Ansible", value: "Ansible" },
 ];
 
-const AddProjectPage = () => {
+const AddProjectPage = ({ employeeOptions }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const initialValue = {
@@ -212,7 +212,7 @@ const AddProjectPage = () => {
                       width: "100%",
                     }}
                     placeholder="Please select employess"
-                    options={employessOptions}
+                    options={employeeOptions}
                   />
                 </Form.Item>
               </Col>

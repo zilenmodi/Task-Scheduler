@@ -1,11 +1,12 @@
 import React from "react";
 import { auto } from "@popperjs/core";
-import { Space, Table, Tag, Button, Pagination } from "antd";
+import { Space, Table, Tag, Button, Select } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { deleteProject } from "../../redux/projectsSlice/projectsSlice";
+import { VALUE_SPLIT } from "rc-cascader/lib/utils/commonUtil";
 
 const technologiesColors = {
   HTML: "magenta",
@@ -59,6 +60,33 @@ const technologiesColors = {
   Jenkins: "volcano",
   Ansible: "red",
 };
+
+const propertiesOptions = [
+  {
+    label: "createBy",
+    value: "createBy",
+  },
+  {
+    label: "assignedTo",
+    value: "assignedTo",
+  },
+  {
+    label: "priority",
+    value: "priority",
+  },
+  {
+    label: "tags",
+    value: "tags",
+  },
+  {
+    label: "createAt",
+    value: "createAt",
+  },
+  {
+    label: "dueDate",
+    value: "dueDate",
+  },
+];
 
 const ProjectsTable = () => {
   const dispatch = useDispatch();
@@ -227,6 +255,8 @@ const ProjectsTable = () => {
     },
   ];
 
+  const [currentColumns, setCurrentColumns] = useState(columns);
+
   const data = projects?.map((project) => {
     return {
       key: project.projectId,
@@ -250,6 +280,16 @@ const ProjectsTable = () => {
     };
   });
 
+  const handleChangeSelectProperties = (values) => {
+    const newProperties = ["name", ...values, "action"];
+    const newColumnsData = columns.filter((column) => {
+      if (newProperties.includes(column.key)) {
+        return column;
+      }
+    });
+    setCurrentColumns(values.length ? newColumnsData : columns);
+  };
+
   return (
     <>
       <div
@@ -260,13 +300,21 @@ const ProjectsTable = () => {
           justifyContent: "end",
         }}
       >
+        <Select
+          mode="multiple"
+          allowClear
+          style={{ marginRight: "1rem", width: "200px" }}
+          placeholder="Please select properties"
+          onChange={handleChangeSelectProperties}
+          options={propertiesOptions}
+        />
         <Button type="primary" onClick={() => navigate("/projects/add")}>
           Add New Project
         </Button>
       </div>
       <Table
         style={{ marginTop: "1rem", overflow: auto }}
-        columns={columns}
+        columns={currentColumns}
         dataSource={data}
         pagination={{
           defaultPageSize: 5,

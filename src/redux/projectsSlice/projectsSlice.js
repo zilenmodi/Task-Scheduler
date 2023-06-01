@@ -1,4 +1,6 @@
 import { createAsyncThunk, createSlice, nanoid } from "@reduxjs/toolkit";
+import { build } from "esbuild";
+import { addNewUser } from "../usersSlice/usersSlice";
 
 const initialState = {
   projects: JSON.parse(localStorage.getItem("projects")) || [],
@@ -59,6 +61,7 @@ const projectsSlice = createSlice({
       state.status = "failed";
       state.error = action.payload.error;
     });
+    // build.addCase(addNewUser, (state, action) => {});
   },
 });
 

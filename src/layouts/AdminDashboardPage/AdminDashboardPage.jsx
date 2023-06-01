@@ -10,6 +10,7 @@ import {
 import { Menu } from "antd";
 import { useState } from "react";
 import ProjectsTable from "./ProjectsTable";
+import UsersTable from "./UsersTable";
 const items = [
   {
     label: "Projects",
@@ -31,9 +32,11 @@ const items = [
 const AdminDashboardPage = () => {
   const [current, setCurrent] = useState("projects");
   const onClick = (e) => {
-    console.log("click ", e);
     setCurrent(e.key);
   };
+
+  console.log(process);
+
   return (
     <>
       <div className={style.container}>
@@ -46,6 +49,7 @@ const AdminDashboardPage = () => {
             items={items}
           />
           {current === "projects" && <ProjectsTable />}
+          {current === "employees" && <UsersTable />}
         </Card>
       </div>
     </>

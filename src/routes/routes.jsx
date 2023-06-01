@@ -1,4 +1,5 @@
 import AddProjectContainer from "../containers/AddProjectContainer/AddProjectContainer";
+import AddUserContainer from "../containers/AddProjectContainer copy/AddUserContainer";
 import AdminDashboardContainer from "../containers/AdminDashboardContainer/AdminDashboardContainer";
 import EditProjectContainer from "../containers/EditProjectContainer/EditProjectContainer";
 import NotesContainer from "../containers/NotesContainer/NotesContainer";
@@ -23,6 +24,10 @@ import {
   SIGN_UP_PAGE_URL,
   TODAYS_TASKS,
   TODAYS_TASKS_URL,
+  USERS_ID_ADD,
+  USERS_ID_ADD_URL,
+  USERS_ID_EDIT,
+  USERS_ID_EDIT_URL,
 } from "./constant";
 
 export const routersConfig = {
@@ -74,6 +79,18 @@ export const routersConfig = {
       url: NOTES_URL,
       exact: true,
       component: <NotesContainer />,
+    },
+    {
+      name: USERS_ID_ADD,
+      url: USERS_ID_ADD_URL,
+      exact: true,
+      component: <AddUserContainer />,
+    },
+    {
+      name: USERS_ID_EDIT,
+      url: USERS_ID_EDIT_URL,
+      exact: true,
+      component: <EditProjectContainer />,
     },
   ],
 };

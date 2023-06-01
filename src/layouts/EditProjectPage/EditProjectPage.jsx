@@ -159,7 +159,7 @@ const EditProjectPage = () => {
     assignTo: projectWithId.assignTo,
     priority: projectWithId.priority,
     technologies: projectWithId.tags,
-    dueDate: dayjs(projectWithId.dueDate),
+    dueDate: projectWithId.dueDate ? dayjs(projectWithId.dueDate) : null,
   };
 
   const onFinishForm = (values) => {
