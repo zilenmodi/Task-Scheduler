@@ -5,9 +5,9 @@ import "./index.css";
 import Store from "./redux/Store.jsx";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <React.StrictMode>
-    <Store>
-      <App />
-    </Store>
-  </React.StrictMode>
+  // <React.StrictMode>
+  <Store>
+    <App />
+  </Store>
+  // </React.StrictMode>
 );

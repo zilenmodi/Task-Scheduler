@@ -199,12 +199,7 @@ const AddProjectPage = ({ employeeOptions }) => {
                 </Form.Item>
               </Col>
               <Col xs={24} md={12} lg={8}>
-                <Form.Item
-                  name="assignTo"
-                  label="Assign To"
-                  required
-                  rules={[{ required: true, message: "Please select options" }]}
-                >
+                <Form.Item name="assignTo" label="Assign To">
                   <Select
                     mode="multiple"
                     allowClear

@@ -35,8 +35,6 @@ const AdminDashboardPage = () => {
     setCurrent(e.key);
   };
 
-  console.log(process);
-
   return (
     <>
       <div className={style.container}>

@@ -12,9 +12,9 @@ import React, { useState } from "react";
 import style from "./style.module.css";
 import { Select } from "antd";
 import { nanoid } from "@reduxjs/toolkit";
-import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router";
-import { addNewUser } from "../../redux/usersSlice/usersSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router";
+import { updateUser } from "../../redux/usersSlice/usersSlice";
 import TextArea from "antd/es/input/TextArea";
 
 const jobTitleOptions = [
@@ -139,27 +139,33 @@ const branchOptions = [
   },
 ];
 
-const AddUserPage = ({ projectOptions }) => {
+const EditUserPage = ({ projectOptions }) => {
+  const { id } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const users = useSelector((state) => state.users.users);
+  const status = useSelector((state) => state.users.status);
+
+  const [userWithId] = users?.filter((user) => user.userId === id);
+
   const initialValue = {
-    firstName: "",
-    lastname: "",
-    email: "",
-    assignProjects: [],
-    city: null,
-    country: null,
-    description: "",
-    addedAt: null,
-    department: null,
-    jobTitle: null,
-    collegeName: null,
-    branchName: null,
+    firstName: userWithId.firstName,
+    lastName: userWithId.lastName,
+    email: userWithId.email,
+    assignProjects: userWithId.assignProjects,
+    city: userWithId.city,
+    country: userWithId.country,
+    description: userWithId.description,
+    addedAt: userWithId.addedAt,
+    department: userWithId.department,
+    jobTitle: userWithId.jobTitle,
+    collegeName: userWithId.collegeName,
+    branchName: userWithId.branchName,
   };
 
   const onFinishForm = (values) => {
-    const newUser = {
-      userId: nanoid(),
+    const updatedUser = {
+      userId: userWithId.userId,
       firstName: values.firstName,
       lastName: values.lastName,
       email: values.email,
@@ -174,17 +180,23 @@ const AddUserPage = ({ projectOptions }) => {
       branchName: values.branchName,
     };
 
-    dispatch(addNewUser(newUser));
+    dispatch(updateUser(updatedUser));
 
     navigate("/admin/dashboard");
   };
+
+  if (status === "pending") {
+    return <h1>Loading</h1>;
+  }
+
+  console.log(id);
 
   return (
     <>
       <div className={style.container}>
         <Card>
           <Typography.Title level={3} className={style.form_heading}>
-            Add New Employee
+            Update Employee
           </Typography.Title>
           <Form
             layout="vertical"
@@ -367,32 +379,6 @@ const AddUserPage = ({ projectOptions }) => {
                   />
                 </Form.Item>
               </Col>
-              {/* <Col xs={24} md={12} lg={8}>
-                <Form.Item
-                  name="technologies"
-                  label="Technologies"
-                  required
-                  rules={[{ required: true, message: "Please select options" }]}
-                >
-                  <Select
-                    mode="multiple"
-                    allowClear
-                    style={{
-                      width: "100%",
-                    }}
-                    placeholder="Please select technologies"
-                    options={technologiesOptions}
-                  />
-                </Form.Item>
-              </Col> */}
-              {/* <Col xs={24} md={12} lg={8}>
-                <Form.Item name="dueDate" label="Due date">
-                  <DatePicker
-                    style={{ width: "100%" }}
-                    disabledDate={(date) => date < new Date()}
-                  />
-                </Form.Item>
-              </Col> */}
             </Row>
             <Form.Item>
               <Button
@@ -400,7 +386,7 @@ const AddUserPage = ({ projectOptions }) => {
                 htmlType="submit"
                 style={{ marginTop: "1rem" }}
               >
-                Create
+                Save
               </Button>
               <Button
                 onClick={() => navigate("/admin/dashboard")}
@@ -417,4 +403,4 @@ const AddUserPage = ({ projectOptions }) => {
   );
 };
 
-export default AddUserPage;
+export default EditUserPage;

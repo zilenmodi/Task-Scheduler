@@ -1,7 +1,8 @@
 import AddProjectContainer from "../containers/AddProjectContainer/AddProjectContainer";
-import AddUserContainer from "../containers/AddProjectContainer copy/AddUserContainer";
+import AddUserContainer from "../containers/AddUserContainer/AddUserContainer";
 import AdminDashboardContainer from "../containers/AdminDashboardContainer/AdminDashboardContainer";
 import EditProjectContainer from "../containers/EditProjectContainer/EditProjectContainer";
+import EditUserContainer from "../containers/EditUserContainer/EditUserContainer";
 import NotesContainer from "../containers/NotesContainer/NotesContainer";
 import ProjectDashboardContainer from "../containers/ProjectDashboardContainer/ProjectDashboardContainer";
 import TodaysTaskConatiner from "../containers/TodaysTaskContainer/TodaysTaskConatiner";
@@ -90,7 +91,7 @@ export const routersConfig = {
       name: USERS_ID_EDIT,
       url: USERS_ID_EDIT_URL,
       exact: true,
-      component: <EditProjectContainer />,
+      component: <EditUserContainer />,
     },
   ],
 };

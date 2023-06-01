@@ -143,7 +143,7 @@ const technologiesOptions = [
   { label: "Ansible", value: "Ansible" },
 ];
 
-const EditProjectPage = () => {
+const EditProjectPage = ({ employeeOptions }) => {
   const { id } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -215,12 +215,7 @@ const EditProjectPage = () => {
                 </Form.Item>
               </Col>
               <Col xs={24} md={12} lg={8}>
-                <Form.Item
-                  name="assignTo"
-                  label="Assign To"
-                  required
-                  rules={[{ required: true, message: "Please select options" }]}
-                >
+                <Form.Item name="assignTo" label="Assign To">
                   <Select
                     mode="multiple"
                     allowClear
@@ -228,7 +223,7 @@ const EditProjectPage = () => {
                       width: "100%",
                     }}
                     placeholder="Please select employess"
-                    options={employessOptions}
+                    options={employeeOptions}
                   />
                 </Form.Item>
               </Col>
