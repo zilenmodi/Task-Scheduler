@@ -39,7 +39,7 @@ const projectsSlice = createSlice({
     updateProject: (state, action) => {
       const newProjects = state.projects.map((project) => {
         if (project.projectId === action.payload.projectId) {
-          return { ...project, projectName: action.payload.projectName };
+          return action.payload;
         }
         return project;
       });

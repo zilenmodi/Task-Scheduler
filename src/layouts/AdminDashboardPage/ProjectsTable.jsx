@@ -220,8 +220,8 @@ const ProjectsTable = () => {
       key: "action",
       render: (_, { key }) => (
         <Space size="middle">
-          <a>Edit</a>
-          <a onClick={() => dispatch(deleteProject(key))}>Delete</a>
+          <NavLink to={`/projects/${key}/edit`}>Edit</NavLink>
+          <NavLink onClick={() => dispatch(deleteProject(key))}>Delete</NavLink>
         </Space>
       ),
     },

@@ -12,9 +12,13 @@ import React, { useState } from "react";
 import style from "./style.module.css";
 import { Select, Space } from "antd";
 import { nanoid } from "@reduxjs/toolkit";
-import { useDispatch } from "react-redux";
-import { addNewProject } from "../../redux/projectsSlice/projectsSlice";
-import { useNavigate } from "react-router";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  addNewProject,
+  updateProject,
+} from "../../redux/projectsSlice/projectsSlice";
+import { useNavigate, useParams } from "react-router";
+import dayjs from "dayjs";
 
 const employessOptions = [
   {
@@ -139,41 +143,53 @@ const technologiesOptions = [
   { label: "Ansible", value: "Ansible" },
 ];
 
-const AddProjectPage = () => {
+const EditProjectPage = () => {
+  const { id } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const projects = useSelector((state) => state.projects.projects);
+  const status = useSelector((state) => state.projects.status);
+
+  const [projectWithId] = projects?.filter(
+    (project) => project.projectId === id
+  );
+
   const initialValue = {
-    projectName: "",
-    assignTo: [],
-    priority: null,
-    technologies: [],
-    dueDate: null,
+    projectName: projectWithId.projectName,
+    assignTo: projectWithId.assignTo,
+    priority: projectWithId.priority,
+    technologies: projectWithId.tags,
+    dueDate: dayjs(projectWithId.dueDate),
   };
 
   const onFinishForm = (values) => {
-    const newProject = {
-      projectId: nanoid(),
+    const updatedProject = {
+      projectId: id,
       projectName: values.projectName,
       createBy: "Zilen Modi",
-      createAt: new Date().toString(),
+      createAt: projectWithId.createAt,
       dueDate: values.dueDate ? values.dueDate.toString() : null,
-      boards: [],
+      boards: projectWithId.boards,
       tags: values.technologies,
       assignTo: values.assignTo,
       priority: values.priority,
     };
 
-    dispatch(addNewProject(newProject));
+    dispatch(updateProject(updatedProject));
 
     navigate("/admin/dashboard");
   };
+
+  if (status === "pending") {
+    return <h1>Loading</h1>;
+  }
 
   return (
     <>
       <div className={style.container}>
         <Card>
           <Typography.Title level={3} className={style.form_heading}>
-            Add New Project
+            Edit Project
           </Typography.Title>
           <Form
             layout="vertical"
@@ -224,10 +240,10 @@ const AddProjectPage = () => {
                   rules={[{ required: true, message: "Please select options" }]}
                 >
                   <Select
-                    placeholder="Please select priority"
                     style={{
                       width: "100%",
                     }}
+                    placeholder="Please select priority"
                     options={priorityOptions}
                   />
                 </Form.Item>
@@ -265,7 +281,7 @@ const AddProjectPage = () => {
                 htmlType="submit"
                 style={{ marginTop: "1rem" }}
               >
-                Create
+                Save
               </Button>
               <Button
                 onClick={() => navigate("/admin/dashboard")}
@@ -282,4 +298,4 @@ const AddProjectPage = () => {
   );
 };
 
-export default AddProjectPage;
+export default EditProjectPage;
