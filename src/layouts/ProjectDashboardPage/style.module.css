@@ -1,0 +1,66 @@
+.container {
+  width: 100%;
+  overflow: auto;
+  padding: 3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  height: 100vh;
+}
+
+.project_title_heading {
+  font-weight: 600 !important;
+  font-family: "Nunito", sans-serif !important;
+}
+
+.ant-card-body {
+  padding: 0 !important;
+}
+
+.boardItems {
+  list-style-type: none;
+}
+
+.boardItem {
+  margin-bottom: 0.3rem;
+}
+
+.board_columns {
+  min-width: 280px;
+  width: 280px;
+  max-height: 600px;
+  overflow: hidden;
+  height: fit-content;
+}
+
+.board_columns:hover {
+  overflow: auto;
+}
+
+.board_column_add_btn,
+.board_column_add_input_box {
+  height: fit-content;
+  transition: all 0.3s;
+  margin-bottom: 0.8rem;
+}
+
+.board_column_add_btn:hover {
+  background: #eee;
+  cursor: pointer;
+}
+
+.board_column_add_input {
+  padding: 0;
+  border: none;
+  outline: none;
+}
+
+.board_column_add_box {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.board_column_add_input:focus {
+  box-shadow: none;
+}

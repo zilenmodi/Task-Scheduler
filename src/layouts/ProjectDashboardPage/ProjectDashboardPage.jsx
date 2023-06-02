@@ -1,145 +1,81 @@
-import { Typography } from "@mui/material";
-import React from "react";
+import { Box, Typography } from "@mui/material";
+import React, { useState } from "react";
 import { useParams } from "react-router";
-import { Droppable, Draggable } from "react-beautiful-dnd";
-import { DragDropContext } from "react-beautiful-dnd";
-import { useState } from "react";
+import { Button, Card, Menu } from "antd";
+import {
+  TableOutlined,
+  BarsOutlined,
+  AppstoreOutlined,
+  CalendarOutlined,
+  EditOutlined,
+  DeleteOutlined,
+} from "@ant-design/icons";
+import style from "./style.module.css";
+import BoardsView from "./BoardsView";
 
-const Card = ({ id, title }) => {
-  return (
-    <div
-      style={{
-        background: "cyan",
-        margin: "1rem",
-        cursor: "pointer",
-        padding: "1rem",
-      }}
-    >
-      <h3>{title}</h3>
-    </div>
-  );
-};
-
-const Column = ({ title, cards, columnId }) => {
-  return (
-    <div>
-      <h2>{title}</h2>
-      <Droppable droppableId={columnId}>
-        {(provided) => (
-          <div
-            ref={provided.innerRef}
-            {...provided.droppableProps}
-            style={{
-              background: "red",
-              padding: "1rem",
-            }}
-          >
-            {cards.map((card, index) => {
-              console.log(card.id);
-              return (
-                <Draggable key={card.id} draggableId={card.id} index={index}>
-                  {(provided) => (
-                    <div
-                      key={card.id}
-                      ref={provided.innerRef}
-                      {...provided.draggableProps}
-                      {...provided.dragHandleProps}
-                      onClick={() => console.log("hii")}
-                    >
-                      <Card title={card.title} />
-                    </div>
-                  )}
-                </Draggable>
-              );
-            })}
-            {provided.placeholder}
-          </div>
-        )}
-      </Droppable>
-    </div>
-  );
-};
+const items = [
+  {
+    label: "Boards",
+    key: "boardsView",
+    icon: <BarsOutlined />,
+  },
+  {
+    label: "Table",
+    key: "tableView",
+    icon: <TableOutlined />,
+  },
+  {
+    label: "Cards",
+    key: "cardsView",
+    icon: <AppstoreOutlined />,
+  },
+  { label: "Calender", key: "calenderView", icon: <CalendarOutlined /> },
+];
 
 const ProjectDashboardPage = () => {
-  const [columns, setColumns] = useState({
-    todo: {
-      id: "todo",
-      title: "Todo",
-      cards: [
-        { id: "1", title: "Task 1" },
-        { id: "2", title: "Task 2" },
-      ],
-    },
-    inProgress: {
-      id: "inProgress",
-      title: "In Progress",
-      cards: [
-        { id: "3", title: "Task 3" },
-        { id: "4", title: "Task 4" },
-      ],
-    },
-    done: {
-      id: "done",
-      title: "Done",
-      cards: [
-        { id: "5", title: "Task 5" },
-        { id: "6", title: "Task 6" },
-      ],
-    },
-  });
-
-  const handleDragEnd = (result) => {
-    console.log(result);
-    const { source, destination } = result;
-
-    if (!destination) {
-      return;
-    }
-
-    if (
-      source.droppableId === destination.droppableId &&
-      source.index === destination.index
-    ) {
-      return;
-    }
-
-    const startColumn = columns[source.droppableId];
-    const endColumn = columns[destination.droppableId];
-
-    const startCards = Array.from(startColumn.cards);
-    const endCards = Array.from(endColumn.cards);
-
-    const [draggedCard] = startCards.splice(source.index, 1);
-    endCards.splice(destination.index, 0, draggedCard);
-
-    const updatedColumns = {
-      ...columns,
-      [source.droppableId]: {
-        ...startColumn,
-        cards: startCards,
-      },
-      [destination.droppableId]: {
-        ...endColumn,
-        cards: endCards,
-      },
-    };
-
-    setColumns(updatedColumns);
+  const [current, setCurrent] = useState("boardsView");
+  const onClick = (e) => {
+    setCurrent(e.key);
   };
-
   return (
-    <DragDropContext onDragEnd={handleDragEnd}>
-      <div style={{ display: "flex", gap: "10rem" }}>
-        {Object.values(columns).map((column) => (
-          <Column
-            key={column.id}
-            title={column.title}
-            cards={column.cards}
-            columnId={column.id}
+    // <div className="layout__wrapper">
+    //   <LeadsOverview />
+    // </div>
+    <>
+      <div className={style.container}>
+        <Card>
+          <Box
+            sx={{
+              width: "100%",
+              display: "flex",
+              justifyContent: "space-between",
+            }}
+          >
+            <Typography variant="h5" className={style.project_title_heading}>
+              Project 1
+            </Typography>
+            <Box>
+              <Button style={{ marginRight: "0.4rem" }}>
+                <EditOutlined />
+              </Button>
+              <Button>
+                <DeleteOutlined />
+              </Button>
+            </Box>
+          </Box>
+        </Card>
+        <Card>
+          <Menu
+            onClick={onClick}
+            selectedKeys={[current]}
+            mode="horizontal"
+            items={items}
           />
-        ))}
+          {current === "boardsView" && <BoardsView />}
+          {/* {current === "employees" && <UsersTable />} */}
+        </Card>
       </div>
-    </DragDropContext>
+    </>
   );
 };
 

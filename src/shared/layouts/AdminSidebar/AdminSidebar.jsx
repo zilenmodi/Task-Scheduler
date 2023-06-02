@@ -25,7 +25,7 @@ function getItem(label, key, icon, children, type) {
 }
 
 const AdminSidebar = () => {
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(true);
   const toggleCollapsed = () => {
     setCollapsed(!collapsed);
   };
@@ -64,12 +64,12 @@ const AdminSidebar = () => {
     <>
       <div
         style={{
-          width: 260,
+          width: 80,
         }}
       >
         <Menu
           defaultSelectedKeys={[location.pathname]}
-          defaultOpenKeys={["sub1"]}
+          // defaultOpenKeys={["sub1"]}
           mode="inline"
           theme="light"
           inlineCollapsed={collapsed}
