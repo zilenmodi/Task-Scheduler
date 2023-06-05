@@ -1,11 +1,15 @@
 .container {
-  width: 80%;
+  width: 100%;
   overflow: auto;
   padding: 3rem;
   display: flex;
   flex-direction: column;
   gap: 2rem;
   margin: 0 auto;
+  height: 100vh;
+  background: url("https://images5.alphacoders.com/128/1280267.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
 .form_heading {

@@ -6,11 +6,40 @@
   flex-direction: column;
   gap: 2rem;
   height: 100vh;
+  background: url("https://images5.alphacoders.com/128/1280267.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
 .project_title_heading {
   font-weight: 600 !important;
   font-family: "Nunito", sans-serif !important;
+}
+
+.boardview_box {
+  display: flex;
+  gap: 1.6rem;
+  margin: 1rem;
+  overflow: auto;
+  padding-bottom: 2rem;
+}
+
+.boardview_box::-webkit-scrollbar,
+.moreOptions_board::-webkit-scrollbar {
+  height: 5px;
+  width: 3px;
+}
+
+.boardview_box::-webkit-scrollbar-track,
+.moreOptions_board::-webkit-scrollbar-track {
+  background-color: #eee;
+  border-radius: 100px;
+}
+
+.boardview_box::-webkit-scrollbar-thumb,
+.moreOptions_board::-webkit-scrollbar-thumb {
+  background-color: #ddd;
+  border-radius: 100px;
 }
 
 .ant-card-body {
@@ -63,4 +92,27 @@
 
 .board_column_add_input:focus {
   box-shadow: none;
+}
+
+.more_option_btn {
+  padding: 0.25rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.more_option_btn:hover {
+  background-color: #00000010;
+}
+
+.more_option_btn_text {
+  padding: 0.3rem 1rem;
+  border-radius: 4px;
+  font-size: 0.9rem !important;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.more_option_btn_text:hover {
+  background-color: #00000010;
 }

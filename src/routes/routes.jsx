@@ -5,6 +5,7 @@ import EditProjectContainer from "../containers/EditProjectContainer/EditProject
 import EditUserContainer from "../containers/EditUserContainer/EditUserContainer";
 import NotesContainer from "../containers/NotesContainer/NotesContainer";
 import ProjectDashboardContainer from "../containers/ProjectDashboardContainer/ProjectDashboardContainer";
+import TaskDashboardContainer from "../containers/TaskDashboardContainer/TaskDashboardContainer";
 import TodaysTaskConatiner from "../containers/TodaysTaskContainer/TodaysTaskConatiner";
 import LoginPageContainer from "../shared/containers/LoginPageContainer/LoginPageContainer";
 import SignupPageContainer from "../shared/containers/SignupPageContainer/SignupPageContainer";
@@ -23,6 +24,8 @@ import {
   PROJECTS_ID_URL,
   SIGN_UP_PAGE,
   SIGN_UP_PAGE_URL,
+  TASKS_ID,
+  TASKS_ID_URL,
   TODAYS_TASKS,
   TODAYS_TASKS_URL,
   USERS_ID_ADD,
@@ -92,6 +95,12 @@ export const routersConfig = {
       url: USERS_ID_EDIT_URL,
       exact: true,
       component: <EditUserContainer />,
+    },
+    {
+      name: TASKS_ID,
+      url: TASKS_ID_URL,
+      exact: true,
+      component: <TaskDashboardContainer />,
     },
   ],
 };

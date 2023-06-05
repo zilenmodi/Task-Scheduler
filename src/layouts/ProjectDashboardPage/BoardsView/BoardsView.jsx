@@ -2,38 +2,85 @@ import React from "react";
 import { Droppable, Draggable } from "react-beautiful-dnd";
 import { DragDropContext } from "react-beautiful-dnd";
 import { useState, useEffect } from "react";
-import "./stylez.css";
 import { Card, Input, Button, Tag } from "antd";
 import { Box, Typography } from "@mui/material";
-import style from "./style.module.css";
+import style from "../style.module.css";
 import { CloseOutlined } from "@ant-design/icons";
 import { nanoid } from "@reduxjs/toolkit";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
-import { addBoardProject } from "../../redux/projectsSlice/projectsSlice";
+import {
+  addBoardProject,
+  addNewTaskProject,
+  updateBoardPositions,
+} from "../../../redux/projectsSlice/projectsSlice";
+import DroppableList from "./BoardCard";
 
-const DATA = [
+const boardColors = [
   {
-    id: "af1",
-    label: "To-Do",
-    itemsList: [],
-    color: "blue",
-    bgcolor: "#e6f4ff",
+    colorName: "default",
+    backgroundColorName: "#00000005",
   },
   {
-    id: "af4",
-    label: "Running",
-    itemsList: [],
-    color: "gold",
-    bgcolor: "#fffbe6",
+    colorName: "success",
+    backgroundColorName: "#f6ffed",
   },
   {
-    id: "af7",
-    label: "Finished",
-    itemsList: [],
-    color: "green",
-    bgcolor: "#f6ffed",
+    colorName: "processing",
+    backgroundColorName: "#e6f4ff",
+  },
+  {
+    colorName: "error",
+    backgroundColorName: "#fff2f0",
+  },
+  {
+    colorName: "warning",
+    backgroundColorName: "#fffbe6",
+  },
+  {
+    colorName: "magenta",
+    backgroundColorName: "#fff0f6",
+  },
+  {
+    colorName: "red",
+    backgroundColorName: "#fff1f0",
+  },
+  {
+    colorName: "volcano",
+    backgroundColorName: "#fff2e8",
+  },
+  {
+    colorName: "orange",
+    backgroundColorName: "#fff7e6",
+  },
+  {
+    colorName: "gold",
+    backgroundColorName: "#fffbe6",
+  },
+  {
+    colorName: "lime",
+    backgroundColorName: "#fcffe6",
+  },
+  {
+    colorName: "green",
+    backgroundColorName: "#f6ffed",
+  },
+  {
+    colorName: "cyan",
+    backgroundColorName: "#e6fffb",
+  },
+  {
+    colorName: "blue",
+    backgroundColorName: "#e6f4ff",
+  },
+  {
+    colorName: "geekblue",
+    backgroundColorName: "#f0f5ff",
+  },
+  {
+    colorName: "purple",
+    backgroundColorName: "#f9f0ff",
   },
 ];
 
@@ -48,30 +95,53 @@ function LeadsOverview() {
   const [projectWithId] = projects?.filter(
     (project) => project.projectId === projectId
   );
+  const newtasksMap = new Map();
+  projectWithId.tasks.map((task) => {
+    newtasksMap.set(task.id, task);
+  });
 
   useEffect(() => {
-    // Mock an API call.
+    // Mock an API call. projectWithId.tasks ?? []
     buildAndSave(projectWithId.boards ?? []);
   }, [projectWithId]);
 
-  function buildAndSave(items) {
+  function buildAndSave(boards) {
     const groups = {};
-    for (let i = 0; i < Object.keys(items).length; ++i) {
-      const currentGroup = items[i];
+    // const items = [];
+    for (let i = 0; i < Object.keys(boards).length; ++i) {
+      const currentGroup = boards[i];
       groups[currentGroup.id] = i;
-    }
 
+      //set key to value
+      // const boardItemsWithValue = {
+      //   ...boards[i],
+      //   itemsList: boards[i].itemsList.map((key) => {
+      //     return newtasksMap.get(key);
+      //   }),
+      // };
+      // items.push(boardItemsWithValue);
+    }
     // Set the data.
-    setItems(items);
+    setItems(boards);
 
     // Makes the groups searchable via their id.
     setGroups(groups);
   }
 
   const handleAddnewTask = (id, title) => {
+    const newTask = {
+      id: nanoid(),
+      label: title.trim().length ? title : "Untitled",
+    };
+    const projectDetails = {
+      projectId,
+      boardId: id,
+      newTask,
+    };
+    dispatch(addNewTaskProject(projectDetails));
+
     const newItems = items.map((item) => {
       if (item.id === id) {
-        console.log(item);
         return {
           ...item,
           itemsList: [
@@ -82,6 +152,7 @@ function LeadsOverview() {
       }
       return item;
     });
+
     setItems(newItems);
   };
 
@@ -90,8 +161,8 @@ function LeadsOverview() {
       id: nanoid(),
       label: title.trim().length ? title : "Untitled",
       itemsList: [],
-      color: "geekblue",
-      bgcolor: "",
+      color: boardColors[0].colorName,
+      bgcolor: boardColors[0].backgroundColorName,
     };
     const projectDetails = {
       projectId,
@@ -126,7 +197,11 @@ function LeadsOverview() {
           workValue.splice(targetIndex, 0, deletedItem);
 
           buildAndSave(workValue);
-
+          const projectDetails = {
+            projectId,
+            boards: workValue,
+          };
+          dispatch(updateBoardPositions(projectDetails));
           return;
         }
 
@@ -153,7 +228,11 @@ function LeadsOverview() {
         };
 
         setItems(workValue);
-
+        const projectDetails = {
+          projectId,
+          boards: workValue,
+        };
+        dispatch(updateBoardPositions(projectDetails));
         console.log(workValue);
       }}
     >
@@ -167,7 +246,7 @@ function LeadsOverview() {
           <Box
             {...provided.droppableProps}
             ref={provided.innerRef}
-            sx={{ display: "flex", gap: "1.6rem", m: 2, overflow: "auto" }}
+            className={style.boardview_box}
           >
             {addBoardOpened ? (
               <Card
@@ -215,133 +294,36 @@ function LeadsOverview() {
               </Card>
             )}
 
-            {items.map((item, index) => (
-              <Draggable draggableId={item.id} key={item.id} index={index}>
-                {(provided) => (
-                  <Card
-                    {...provided.draggableProps}
-                    {...provided.dragHandleProps}
-                    ref={provided.innerRef}
-                    bodyStyle={{
-                      padding: "0rem",
-                    }}
-                    className={style.board_columns}
-                  >
-                    <DroppableList
-                      key={item.id}
-                      {...item}
-                      handleAddnewTask={handleAddnewTask}
-                    />
-                  </Card>
-                )}
-              </Draggable>
-            ))}
+            {items.map((item, index) => {
+              return (
+                <Draggable draggableId={item.id} key={item.id} index={index}>
+                  {(provided) => (
+                    <Card
+                      {...provided.draggableProps}
+                      {...provided.dragHandleProps}
+                      ref={provided.innerRef}
+                      bodyStyle={{
+                        padding: "0rem",
+                      }}
+                      className={style.board_columns}
+                    >
+                      <DroppableList
+                        key={item.id}
+                        {...item}
+                        newtasksMap={newtasksMap}
+                        handleAddnewTask={handleAddnewTask}
+                      />
+                    </Card>
+                  )}
+                </Draggable>
+              );
+            })}
 
             {provided.placeholder}
           </Box>
         )}
       </Droppable>
     </DragDropContext>
-  );
-}
-
-function DroppableList({
-  id,
-  itemsList,
-  label,
-  handleAddnewTask,
-  color,
-  bgcolor,
-}) {
-  const [addTaskOpened, setAddTaskOpend] = useState(false);
-  const [currentTaskInput, setCurrentTaskInput] = useState("");
-  return (
-    <Droppable droppableId={id}>
-      {(provided, snapshot) => (
-        <Box
-          {...provided.droppableProps}
-          ref={provided.innerRef}
-          style={{
-            padding: "0.3rem",
-            background: snapshot.isDraggingOver ? "#eee" : bgcolor,
-          }}
-        >
-          <Typography variant="subtitle1" fontWeight={600} paddingBottom={2}>
-            <Tag color={color}>{label}</Tag>
-          </Typography>
-          {addTaskOpened ? (
-            <Card
-              bodyStyle={{
-                padding: "0.5rem 1rem",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "start",
-                gap: "1rem",
-              }}
-              className={style.board_column_add_input_box}
-            >
-              <Input
-                autoFocus
-                placeholder="Task Name"
-                className={style.board_column_add_input}
-                style={{
-                  width: "200px",
-                }}
-                onChange={(e) => setCurrentTaskInput(e.target.value)}
-              />
-              <Box>
-                <Button
-                  type="primary"
-                  style={{ marginRight: "1rem" }}
-                  onClick={() => {
-                    handleAddnewTask(id, currentTaskInput);
-                    setAddTaskOpend(false);
-                    setCurrentTaskInput("");
-                  }}
-                >
-                  Add
-                </Button>
-                <Button onClick={() => setAddTaskOpend(false)}>Cancel</Button>
-              </Box>
-            </Card>
-          ) : (
-            <Card
-              bodyStyle={{
-                padding: "0.5rem 1rem",
-              }}
-              className={style.board_column_add_btn}
-              onClick={() => setAddTaskOpend(true)}
-            >
-              + Add Task
-            </Card>
-          )}
-          <div style={{ marginBottom: "0.5rem" }}>
-            <ul className={style.boardItems}>
-              {itemsList.map((item, index) => (
-                <li className={style.boardItem} key={item.id}>
-                  <Draggable draggableId={item.id} index={index}>
-                    {(provided) => (
-                      <Card
-                        {...provided.draggableProps}
-                        {...provided.dragHandleProps}
-                        ref={provided.innerRef}
-                        bodyStyle={{
-                          padding: "1rem",
-                        }}
-                      >
-                        {item.label}
-                      </Card>
-                    )}
-                  </Draggable>
-                </li>
-              ))}
-
-              {provided.placeholder}
-            </ul>
-          </div>
-        </Box>
-      )}
-    </Droppable>
   );
 }
 

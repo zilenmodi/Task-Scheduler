@@ -1,7 +1,7 @@
 import { Box, Typography } from "@mui/material";
 import React, { useState } from "react";
 import { useParams } from "react-router";
-import { Button, Card, Menu } from "antd";
+import { Button, Card, Col, Menu, Row } from "antd";
 import {
   TableOutlined,
   BarsOutlined,
@@ -11,32 +11,11 @@ import {
   DeleteOutlined,
 } from "@ant-design/icons";
 import style from "./style.module.css";
-import BoardsView from "./BoardsView/BoardsView";
+import TextEditor from "./TextEditor";
+import TaskSideBar from "./TaskSideBar";
+import TaskMainSec from "./TaskMainSec";
 
-const items = [
-  {
-    label: "Boards",
-    key: "boardsView",
-    icon: <BarsOutlined />,
-  },
-  {
-    label: "Table",
-    key: "tableView",
-    icon: <TableOutlined />,
-  },
-  {
-    label: "Cards",
-    key: "cardsView",
-    icon: <AppstoreOutlined />,
-  },
-  { label: "Calender", key: "calenderView", icon: <CalendarOutlined /> },
-];
-
-const ProjectDashboardPage = () => {
-  const [current, setCurrent] = useState("boardsView");
-  const onClick = (e) => {
-    setCurrent(e.key);
-  };
+const TaskDashboardPage = () => {
   return (
     <>
       <div className={style.container}>
@@ -49,7 +28,7 @@ const ProjectDashboardPage = () => {
             }}
           >
             <Typography variant="h5" className={style.project_title_heading}>
-              Project 1
+              Task 1
             </Typography>
             <Box>
               <Button style={{ marginRight: "0.4rem" }}>
@@ -61,19 +40,19 @@ const ProjectDashboardPage = () => {
             </Box>
           </Box>
         </Card>
-        <Card className={style.background_container}>
-          <Menu
-            onClick={onClick}
-            selectedKeys={[current]}
-            mode="horizontal"
-            items={items}
-          />
-          {current === "boardsView" && <BoardsView />}
-          {/* {current === "employees" && <UsersTable />} */}
+        <Card className={style.background_container_card}>
+          <Row gutter={[16]}>
+            <Col xs={24} md={18} lg={20}>
+              <TaskMainSec />
+            </Col>
+            <Col xs={24} md={6} lg={4}>
+              <TaskSideBar />
+            </Col>
+          </Row>
         </Card>
       </div>
     </>
   );
 };
 
-export default ProjectDashboardPage;
+export default TaskDashboardPage;

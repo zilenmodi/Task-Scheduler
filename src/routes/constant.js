@@ -8,6 +8,7 @@ export const TODAYS_TASKS = "TODAYS_TASKS";
 export const NOTES = "NOTES";
 export const USERS_ID_ADD = "USER_ID_ADD";
 export const USERS_ID_EDIT = "USER_ID_EDIT";
+export const TASKS_ID = "TASKS_ID";
 
 export const LOGIN_PAGE_URL = "/login";
 export const SIGN_UP_PAGE_URL = "/signup";
@@ -19,3 +20,4 @@ export const TODAYS_TASKS_URL = "/todays-tasks";
 export const NOTES_URL = "/notes";
 export const USERS_ID_ADD_URL = "/users/add";
 export const USERS_ID_EDIT_URL = "/users/:id/edit";
+export const TASKS_ID_URL = "/tasks/:id";

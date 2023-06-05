@@ -1,0 +1,40 @@
+.container {
+  width: 100%;
+  overflow: auto;
+  padding: 3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  height: 100vh;
+  background: url("https://images5.alphacoders.com/128/1280267.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.project_title_heading {
+  font-weight: 600 !important;
+  font-family: "Nunito", sans-serif !important;
+}
+
+.taskSidebar_box {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.taskSidebar_box_btn {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  background-color: #091e420f;
+  padding: 0.5rem 1rem;
+  color: #172b4d;
+}
+
+.taskSidebar_box_btn:hover {
+  background-color: #091e4224;
+}
+
+.background_container_card {
+  height: 60vh;
+}

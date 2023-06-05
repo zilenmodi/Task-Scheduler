@@ -6,6 +6,9 @@
   flex-direction: column;
   gap: 2rem;
   height: 100vh;
+  background: url("https://images5.alphacoders.com/128/1280267.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
 .dash_card_small {
