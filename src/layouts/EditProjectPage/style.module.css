@@ -6,6 +6,7 @@
   flex-direction: column;
   gap: 2rem;
   margin: 0 auto;
+  height: 100vh;
 }
 
 .form_heading {
@@ -14,7 +15,7 @@
   margin-bottom: 3rem !important;
 }
 
-@media screen and (max-width: 600px) {
+@media screen and (max-width: 1400px) {
   .container {
     width: 100%;
   }

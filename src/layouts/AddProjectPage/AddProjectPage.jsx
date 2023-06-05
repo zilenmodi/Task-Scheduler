@@ -15,6 +15,7 @@ import { nanoid } from "@reduxjs/toolkit";
 import { useDispatch } from "react-redux";
 import { addNewProject } from "../../redux/projectsSlice/projectsSlice";
 import { useNavigate } from "react-router";
+import ExtraFieldsOptions from "../EditProjectPage/ExtraFieldsOptions";
 
 // const employessOptions = [
 //   {
@@ -142,6 +143,7 @@ const technologiesOptions = [
 const AddProjectPage = ({ employeeOptions }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [commonProperties, setCommonProperties] = useState([]);
   const initialValue = {
     projectName: "",
     assignTo: [],
@@ -158,9 +160,11 @@ const AddProjectPage = ({ employeeOptions }) => {
       createAt: new Date().toString(),
       dueDate: values.dueDate ? values.dueDate.toString() : null,
       boards: [],
+      tasks: [],
       tags: values.technologies,
       assignTo: values.assignTo,
       priority: values.priority,
+      commonProperties: commonProperties,
     };
 
     dispatch(addNewProject(newProject));
@@ -271,6 +275,15 @@ const AddProjectPage = ({ employeeOptions }) => {
               </Button>
             </Form.Item>
           </Form>
+        </Card>
+        <Card>
+          <Typography.Title level={3} className={style.form_heading}>
+            Extra Fields for Tasks
+          </Typography.Title>
+          <ExtraFieldsOptions
+            commonProperties={commonProperties}
+            setCommonProperties={setCommonProperties}
+          />
         </Card>
       </div>
     </>

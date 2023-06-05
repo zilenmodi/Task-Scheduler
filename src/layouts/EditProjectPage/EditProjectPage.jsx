@@ -19,6 +19,7 @@ import {
 } from "../../redux/projectsSlice/projectsSlice";
 import { useNavigate, useParams } from "react-router";
 import dayjs from "dayjs";
+import ExtraFieldsOptions from "./ExtraFieldsOptions";
 
 const employessOptions = [
   {
@@ -154,6 +155,10 @@ const EditProjectPage = ({ employeeOptions }) => {
     (project) => project.projectId === id
   );
 
+  const [commonProperties, setCommonProperties] = useState(
+    projectWithId?.commonProperties || []
+  );
+
   const initialValue = {
     projectName: projectWithId.projectName,
     assignTo: projectWithId.assignTo,
@@ -170,11 +175,12 @@ const EditProjectPage = ({ employeeOptions }) => {
       createAt: projectWithId.createAt,
       dueDate: values.dueDate ? values.dueDate.toString() : null,
       boards: projectWithId.boards,
+      tasks: projectWithId.tasks,
       tags: values.technologies,
       assignTo: values.assignTo,
       priority: values.priority,
+      commonProperties: commonProperties,
     };
-
     dispatch(updateProject(updatedProject));
 
     navigate("/admin/dashboard");
@@ -287,6 +293,15 @@ const EditProjectPage = ({ employeeOptions }) => {
               </Button>
             </Form.Item>
           </Form>
+        </Card>
+        <Card>
+          <Typography.Title level={3} className={style.form_heading}>
+            Extra Fields for Tasks
+          </Typography.Title>
+          <ExtraFieldsOptions
+            commonProperties={commonProperties}
+            setCommonProperties={setCommonProperties}
+          />
         </Card>
       </div>
     </>

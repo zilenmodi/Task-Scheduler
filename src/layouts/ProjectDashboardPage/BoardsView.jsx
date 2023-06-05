@@ -8,35 +8,30 @@ import { Box, Typography } from "@mui/material";
 import style from "./style.module.css";
 import { CloseOutlined } from "@ant-design/icons";
 import { nanoid } from "@reduxjs/toolkit";
+import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { useParams } from "react-router-dom";
+import { addBoardProject } from "../../redux/projectsSlice/projectsSlice";
 
 const DATA = [
   {
     id: "af1",
     label: "To-Do",
-    itemsList: [
-      { id: "af2", label: "Item 1" },
-      { id: "af3", label: "Item 2" },
-    ],
+    itemsList: [],
     color: "blue",
     bgcolor: "#e6f4ff",
   },
   {
     id: "af4",
     label: "Running",
-    itemsList: [
-      { id: "af5", label: "Item 1" },
-      { id: "af6", label: "Item 2" },
-    ],
+    itemsList: [],
     color: "gold",
     bgcolor: "#fffbe6",
   },
   {
     id: "af7",
     label: "Finished",
-    itemsList: [
-      { id: "af8", label: "Item 1" },
-      { id: "af9", label: "Item 2" },
-    ],
+    itemsList: [],
     color: "green",
     bgcolor: "#f6ffed",
   },
@@ -45,11 +40,19 @@ const DATA = [
 function LeadsOverview() {
   const [items, setItems] = useState([]);
   const [groups, setGroups] = useState({});
+  const [addBoardOpened, setAddBoardOpend] = useState(false);
+  const [currentBoardInput, setCurrentBoardInput] = useState("");
+  const projects = useSelector((state) => state.projects.projects);
+  const dispatch = useDispatch();
+  const { id: projectId } = useParams();
+  const [projectWithId] = projects?.filter(
+    (project) => project.projectId === projectId
+  );
 
   useEffect(() => {
     // Mock an API call.
-    buildAndSave(DATA);
-  }, []);
+    buildAndSave(projectWithId.boards ?? []);
+  }, [projectWithId]);
 
   function buildAndSave(items) {
     const groups = {};
@@ -80,6 +83,22 @@ function LeadsOverview() {
       return item;
     });
     setItems(newItems);
+  };
+
+  const handleAddnewBoard = (title) => {
+    const newBoard = {
+      id: nanoid(),
+      label: title.trim().length ? title : "Untitled",
+      itemsList: [],
+      color: "geekblue",
+      bgcolor: "",
+    };
+    const projectDetails = {
+      projectId,
+      newBoard,
+    };
+    dispatch(addBoardProject(projectDetails));
+    setAddBoardOpend(false);
   };
 
   return (
@@ -142,7 +161,7 @@ function LeadsOverview() {
         droppableId="ROOT"
         type="group"
         direction="horizontal"
-        ignoreContainerClipping="true"
+        ignoreContainerClipping={true}
       >
         {(provided, snapshot) => (
           <Box
@@ -150,15 +169,52 @@ function LeadsOverview() {
             ref={provided.innerRef}
             sx={{ display: "flex", gap: "1.6rem", m: 2, overflow: "auto" }}
           >
-            <Card
-              bodyStyle={{
-                padding: "0.5rem 1rem",
-                minWidth: "260px",
-              }}
-              className={style.board_column_add_btn}
-            >
-              + Add Board
-            </Card>
+            {addBoardOpened ? (
+              <Card
+                bodyStyle={{
+                  padding: "0.5rem 1rem",
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "start",
+                  gap: "1rem",
+                }}
+                className={style.board_column_add_input_box}
+              >
+                <Input
+                  autoFocus
+                  placeholder="Board Name"
+                  className={style.board_column_add_input}
+                  style={{
+                    width: "200px",
+                  }}
+                  onChange={(e) => setCurrentBoardInput(e.target.value)}
+                />
+                <Box>
+                  <Button
+                    type="primary"
+                    style={{ marginRight: "1rem" }}
+                    onClick={() => handleAddnewBoard(currentBoardInput)}
+                  >
+                    Add
+                  </Button>
+                  <Button onClick={() => setAddBoardOpend(false)}>
+                    Cancel
+                  </Button>
+                </Box>
+              </Card>
+            ) : (
+              <Card
+                bodyStyle={{
+                  padding: "0.5rem 1rem",
+                  minWidth: "260px",
+                }}
+                className={style.board_column_add_btn}
+                onClick={() => setAddBoardOpend(true)}
+              >
+                + Add Board
+              </Card>
+            )}
+
             {items.map((item, index) => (
               <Draggable draggableId={item.id} key={item.id} index={index}>
                 {(provided) => (
@@ -211,7 +267,6 @@ function DroppableList({
           }}
         >
           <Typography variant="subtitle1" fontWeight={600} paddingBottom={2}>
-            {/* {label} */}
             <Tag color={color}>{label}</Tag>
           </Typography>
           {addTaskOpened ? (
