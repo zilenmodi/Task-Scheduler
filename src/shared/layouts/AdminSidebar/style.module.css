@@ -6,3 +6,22 @@
   align-items: center;
   position: relative;
 }
+
+.mobile_navbar {
+  width: 100%;
+  padding: 0.6rem;
+  display: none;
+  backdrop-filter: blur(10px);
+  background-color: #00000005;
+}
+
+@media screen and (max-width: 900px) {
+  .AdminSidebar_container {
+    display: none;
+  }
+  .mobile_navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+}

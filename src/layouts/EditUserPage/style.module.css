@@ -1,5 +1,5 @@
 .container {
-  width: 80%;
+  width: 100%;
   overflow: auto;
   padding: 3rem;
   display: flex;
@@ -18,8 +18,9 @@
   margin-bottom: 3rem !important;
 }
 
-@media screen and (max-width: 600px) {
+@media screen and (max-width: 1450px) {
   .container {
-    width: 100%;
+    padding: 1rem;
+    gap: 1rem;
   }
 }

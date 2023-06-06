@@ -13,10 +13,7 @@ import ComputerIcon from "@mui/icons-material/Computer";
 const Header = () => {
   return (
     <>
-      <Row
-        gutter={[16, 16]}
-        style={{ width: "100%", alignContent: "flex-start" }}
-      >
+      <Row gutter={[16, 16]}>
         <Col xs={12} md={8} lg={4}>
           <Tag className={style.dash_card_small} color="blue">
             <ListAltIcon fontSize="medium" sx={{ mb: 2 }} />

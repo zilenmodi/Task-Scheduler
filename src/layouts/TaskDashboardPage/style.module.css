@@ -49,3 +49,10 @@
 .color_cover_box:hover {
   transform: translateY(-2px);
 }
+
+@media screen and (max-width: 1450px) {
+  .container {
+    padding: 1rem;
+    gap: 1rem;
+  }
+}

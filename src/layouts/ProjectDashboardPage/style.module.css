@@ -116,3 +116,10 @@
 .more_option_btn_text:hover {
   background-color: #00000010;
 }
+
+@media screen and (max-width: 1450px) {
+  .container {
+    padding: 1rem;
+    gap: 1rem;
+  }
+}

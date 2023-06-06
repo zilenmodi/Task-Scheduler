@@ -1,6 +1,6 @@
 import { Box, Typography } from "@mui/material";
 import React, { useState } from "react";
-import { useParams } from "react-router";
+import { useParams, useNavigate } from "react-router";
 import { Button, Card, Col, Menu, Row } from "antd";
 import { DeleteOutlined } from "@ant-design/icons";
 import style from "./style.module.css";
@@ -14,6 +14,7 @@ import { updateTaskProject } from "../../redux/projectsSlice/projectsSlice";
 export const TaskContext = createContext();
 
 const TaskDashboardPage = () => {
+  const navigate = useNavigate();
   const { tid: taskId } = useParams();
   const projects = useSelector((state) => state.projects.projects);
   const dispatch = useDispatch();
@@ -46,6 +47,7 @@ const TaskDashboardPage = () => {
       updatedtask,
     };
     dispatch(updateTaskProject(projectDetails));
+    navigate(`/projects/${projectId}`);
   };
 
   return (
@@ -86,7 +88,7 @@ const TaskDashboardPage = () => {
           <Box>
             <Button
               type="primary"
-              style={{ marginRight: "1rem" }}
+              style={{ marginTop: "1rem" }}
               onClick={handleSaveTask}
             >
               Save
