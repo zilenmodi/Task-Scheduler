@@ -3,6 +3,8 @@ import "react-quill/dist/quill.snow.css";
 import ReactQuill from "react-quill";
 import { Button } from "antd";
 import { Box, Typography } from "@mui/material";
+import { useContext } from "react";
+import { TaskContext } from "../TaskDashboardPage";
 
 const EditorModules = {
   toolbar: [
@@ -45,12 +47,21 @@ const EditorFormats = [
 ];
 
 const TextEditor = () => {
-  const [textEditorValue, setTextEditorValue] = useState("");
+  const { taskDetails, setTaskDetails } = useContext(TaskContext);
+  const [textEditorValue, setTextEditorValue] = useState(
+    taskDetails.description
+  );
   const [showTextEditor, setShowTextEditor] = useState(false);
+
+  const handleSaveDescription = () => {
+    setShowTextEditor(false);
+    setTaskDetails((prev) => ({ ...prev, description: textEditorValue }));
+  };
+
   return (
     <>
       {showTextEditor ? (
-        <Box>
+        <Box sx={{ mb: 3 }}>
           <ReactQuill
             theme="snow"
             value={textEditorValue}
@@ -64,7 +75,7 @@ const TextEditor = () => {
             <Button
               type="primary"
               style={{ marginRight: "1rem" }}
-              onClick={() => setShowTextEditor(false)}
+              onClick={handleSaveDescription}
             >
               Save
             </Button>

@@ -20,4 +20,4 @@ export const TODAYS_TASKS_URL = "/todays-tasks";
 export const NOTES_URL = "/notes";
 export const USERS_ID_ADD_URL = "/users/add";
 export const USERS_ID_EDIT_URL = "/users/:id/edit";
-export const TASKS_ID_URL = "/tasks/:id";
+export const TASKS_ID_URL = "/tasks/:pid/:tid";

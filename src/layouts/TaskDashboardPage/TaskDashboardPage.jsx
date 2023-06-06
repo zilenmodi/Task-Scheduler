@@ -2,20 +2,52 @@ import { Box, Typography } from "@mui/material";
 import React, { useState } from "react";
 import { useParams } from "react-router";
 import { Button, Card, Col, Menu, Row } from "antd";
-import {
-  TableOutlined,
-  BarsOutlined,
-  AppstoreOutlined,
-  CalendarOutlined,
-  EditOutlined,
-  DeleteOutlined,
-} from "@ant-design/icons";
+import { DeleteOutlined } from "@ant-design/icons";
 import style from "./style.module.css";
-import TextEditor from "./TaskComponents/TextEditor";
 import TaskSideBar from "./TaskSideBar";
 import TaskMainSec from "./TaskMainSec";
+import { createContext } from "react";
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+import { updateTaskProject } from "../../redux/projectsSlice/projectsSlice";
+
+export const TaskContext = createContext();
 
 const TaskDashboardPage = () => {
+  const { tid: taskId } = useParams();
+  const projects = useSelector((state) => state.projects.projects);
+  const dispatch = useDispatch();
+  const { pid: projectId } = useParams();
+  const [projectWithId] = projects?.filter(
+    (project) => project.projectId === projectId
+  );
+  const alltasks = projectWithId.tasks;
+  const [taskWithId] = alltasks.filter((task) => task.id === taskId);
+
+  const [taskDetails, setTaskDetails] = useState({
+    coverImage: taskWithId.coverImage ?? "",
+    labelsList: taskWithId.labelsList ?? [],
+    checklists: taskWithId.checklists ?? [],
+    dates: taskWithId.dates ?? null,
+    attachmentUrl: taskWithId.attachmentUrl ?? "",
+    allLabelsList: taskWithId.allLabelsList ?? [],
+    imageFileList: taskWithId.imageFileList ?? [],
+    description: taskWithId.description ?? "",
+  });
+
+  const handleSaveTask = () => {
+    const updatedtask = {
+      ...taskWithId,
+      ...taskDetails,
+    };
+    const projectDetails = {
+      projectId,
+      taskId,
+      updatedtask,
+    };
+    dispatch(updateTaskProject(projectDetails));
+  };
+
   return (
     <>
       <div className={style.container}>
@@ -28,12 +60,12 @@ const TaskDashboardPage = () => {
             }}
           >
             <Typography variant="h5" className={style.project_title_heading}>
-              Task 1
+              {taskWithId.label}
             </Typography>
             <Box>
-              <Button style={{ marginRight: "0.4rem" }}>
+              {/* <Button style={{ marginRight: "0.4rem" }}>
                 <EditOutlined />
-              </Button>
+              </Button> */}
               <Button>
                 <DeleteOutlined />
               </Button>
@@ -41,14 +73,25 @@ const TaskDashboardPage = () => {
           </Box>
         </Card>
         <Card className={style.background_container_card}>
-          <Row gutter={[48, 16]}>
-            <Col xs={24} md={18} xxl={20}>
-              <TaskMainSec />
-            </Col>
-            <Col xs={24} md={6} xxl={4}>
-              <TaskSideBar />
-            </Col>
-          </Row>
+          <TaskContext.Provider value={{ taskDetails, setTaskDetails }}>
+            <Row gutter={[48, 16]}>
+              <Col xs={24} md={18} xxl={20}>
+                <TaskMainSec />
+              </Col>
+              <Col xs={24} md={6} xxl={4}>
+                <TaskSideBar />
+              </Col>
+            </Row>
+          </TaskContext.Provider>
+          <Box>
+            <Button
+              type="primary"
+              style={{ marginRight: "1rem" }}
+              onClick={handleSaveTask}
+            >
+              Save
+            </Button>
+          </Box>
         </Card>
       </div>
     </>

@@ -6,7 +6,7 @@ import { Box, Typography } from "@mui/material";
 import style from "../style.module.css";
 import { EllipsisOutlined } from "@ant-design/icons";
 import MoreOptionsBoard from "./MoreOptionsBoard";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 function DroppableList({
   id,
@@ -20,6 +20,7 @@ function DroppableList({
   const navigate = useNavigate();
   const [addTaskOpened, setAddTaskOpend] = useState(false);
   const [currentTaskInput, setCurrentTaskInput] = useState("");
+  const { id: pid } = useParams();
   return (
     <Droppable droppableId={id}>
       {(provided, snapshot) => (
@@ -116,7 +117,7 @@ function DroppableList({
                   <li
                     className={style.boardItem}
                     key={item?.id}
-                    onClick={() => navigate(`/tasks/${item.id}`)}
+                    onClick={() => navigate(`/tasks/${pid}/${item.id}`)}
                   >
                     <Draggable draggableId={item?.id} index={index}>
                       {(provided) => (

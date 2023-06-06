@@ -276,7 +276,7 @@ const AddProjectPage = ({ employeeOptions }) => {
             </Form.Item>
           </Form>
         </Card>
-        <Card>
+        {/* <Card>
           <Typography.Title level={3} className={style.form_heading}>
             Extra Fields for Tasks
           </Typography.Title>
@@ -284,7 +284,7 @@ const AddProjectPage = ({ employeeOptions }) => {
             commonProperties={commonProperties}
             setCommonProperties={setCommonProperties}
           />
-        </Card>
+        </Card> */}
       </div>
     </>
   );

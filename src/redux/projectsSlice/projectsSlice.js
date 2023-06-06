@@ -121,6 +121,27 @@ const projectsSlice = createSlice({
       state.projects = updatedProjects;
       localStorage.setItem("projects", JSON.stringify(state.projects));
     },
+    updateTaskProject: (state, action) => {
+      const projects = JSON.parse(localStorage.getItem("projects"));
+      const updatedProjects = projects.map((project) => {
+        if (project.projectId === action.payload.projectId) {
+          const updateProject = {
+            ...project,
+            tasks: project.tasks.map((task) => {
+              if (task.id === action.payload.taskId) {
+                return action.payload.updatedtask;
+              }
+              return task;
+            }),
+          };
+          return updateProject;
+        }
+        return project;
+      });
+      console.log(updatedProjects);
+      state.projects = updatedProjects;
+      localStorage.setItem("projects", JSON.stringify(state.projects));
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(fetchProjects.pending, (state) => {
@@ -194,4 +215,5 @@ export const {
   updateBoardProject,
   updateBoardPositions,
   addNewTaskProject,
+  updateTaskProject,
 } = projectsSlice.actions;

@@ -10,6 +10,10 @@ import {
 } from "@ant-design/icons";
 import style from "./style.module.css";
 import TaskModalCover from "./TaskModals/TaskModalCover";
+import TaskModalMembers from "./TaskModals/TaskModalMembers";
+import TaskModalLabels from "./TaskModals/TaskModalLabels";
+import TaskModalDate from "./TaskModals/TaskModalDate";
+import TaskModalAttachment from "./TaskModals/TaskModalAttachment";
 
 const TaskSideBar = () => {
   return (
@@ -19,26 +23,17 @@ const TaskSideBar = () => {
           Add to Task
         </Typography>
         <Box className={style.taskSidebar_box}>
-          <div className={style.taskSidebar_box_btn}>
-            <UserOutlined />
-            <Typography fontSize={"0.9rem"}>Members</Typography>
-          </div>
-          <div className={style.taskSidebar_box_btn}>
-            <TagOutlined />
-            <Typography fontSize={"0.9rem"}>Labels</Typography>
-          </div>
+          {/* <TaskModalMembers /> */}
+          <TaskModalLabels />
           <div className={style.taskSidebar_box_btn}>
             <CheckSquareOutlined />
             <Typography fontSize={"0.9rem"}>Checklist</Typography>
           </div>
-          <div className={style.taskSidebar_box_btn}>
-            <ClockCircleOutlined />
-            <Typography fontSize={"0.9rem"}>Dates</Typography>
-          </div>
-          <div className={style.taskSidebar_box_btn}>
-            <LinkOutlined />
-            <Typography fontSize={"0.9rem"}>Attachment</Typography>
-          </div>
+
+          <TaskModalDate />
+
+          <TaskModalAttachment />
+
           <TaskModalCover />
         </Box>
       </Box>
