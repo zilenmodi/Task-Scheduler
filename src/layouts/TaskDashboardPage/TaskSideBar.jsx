@@ -9,43 +9,37 @@ import {
   PicCenterOutlined,
 } from "@ant-design/icons";
 import style from "./style.module.css";
+import TaskModalCover from "./TaskModals/TaskModalCover";
 
 const TaskSideBar = () => {
   return (
     <>
       <Box className={style.taskSidebar_box}>
-        <h3
-          style={{
-            color: "#172b4d",
-          }}
-        >
+        <Typography variant="subtitle1" fontWeight={500} color="#172b4d">
           Add to Task
-        </h3>
+        </Typography>
         <Box className={style.taskSidebar_box}>
           <div className={style.taskSidebar_box_btn}>
             <UserOutlined />
-            <Typography variant="subtitle1">Members</Typography>
+            <Typography fontSize={"0.9rem"}>Members</Typography>
           </div>
           <div className={style.taskSidebar_box_btn}>
             <TagOutlined />
-            <Typography variant="subtitle1">Labels</Typography>
+            <Typography fontSize={"0.9rem"}>Labels</Typography>
           </div>
           <div className={style.taskSidebar_box_btn}>
             <CheckSquareOutlined />
-            <Typography variant="subtitle1">Checklist</Typography>
+            <Typography fontSize={"0.9rem"}>Checklist</Typography>
           </div>
           <div className={style.taskSidebar_box_btn}>
             <ClockCircleOutlined />
-            <Typography variant="subtitle1">Dates</Typography>
+            <Typography fontSize={"0.9rem"}>Dates</Typography>
           </div>
           <div className={style.taskSidebar_box_btn}>
             <LinkOutlined />
-            <Typography variant="subtitle1">Attachment</Typography>
+            <Typography fontSize={"0.9rem"}>Attachment</Typography>
           </div>
-          <div className={style.taskSidebar_box_btn}>
-            <PicCenterOutlined />
-            <Typography variant="subtitle1">Cover</Typography>
-          </div>
+          <TaskModalCover />
         </Box>
       </Box>
     </>

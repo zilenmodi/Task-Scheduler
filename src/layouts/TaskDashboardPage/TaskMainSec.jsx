@@ -2,7 +2,7 @@ import { Box, Typography } from "@mui/material";
 import { Col, Row } from "antd";
 import React from "react";
 import { MenuUnfoldOutlined } from "@ant-design/icons";
-import TextEditor from "./TextEditor";
+import TextEditor from "./TaskComponents/TextEditor";
 
 const TaskMainSec = () => {
   return (
@@ -34,13 +34,15 @@ const TaskMainSec = () => {
             }}
           >
             <Typography
-              variant="h6"
-              fontWeight={600}
+              variant="subtitle1"
+              fontWeight={500}
               sx={{
                 display: "flex",
                 gap: "1rem",
                 alignItems: "center",
+                mb: 1,
               }}
+              color="#172b4d"
             >
               <MenuUnfoldOutlined /> Description
             </Typography>

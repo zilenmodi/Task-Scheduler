@@ -11,7 +11,7 @@ import {
   DeleteOutlined,
 } from "@ant-design/icons";
 import style from "./style.module.css";
-import TextEditor from "./TextEditor";
+import TextEditor from "./TaskComponents/TextEditor";
 import TaskSideBar from "./TaskSideBar";
 import TaskMainSec from "./TaskMainSec";
 
@@ -41,11 +41,11 @@ const TaskDashboardPage = () => {
           </Box>
         </Card>
         <Card className={style.background_container_card}>
-          <Row gutter={[16]}>
-            <Col xs={24} md={18} lg={20}>
+          <Row gutter={[48, 16]}>
+            <Col xs={24} md={18} xxl={20}>
               <TaskMainSec />
             </Col>
-            <Col xs={24} md={6} lg={4}>
+            <Col xs={24} md={6} xxl={4}>
               <TaskSideBar />
             </Col>
           </Row>

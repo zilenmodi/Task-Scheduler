@@ -29,6 +29,7 @@
   background-color: #091e420f;
   padding: 0.5rem 1rem;
   color: #172b4d;
+  border-radius: 5px;
 }
 
 .taskSidebar_box_btn:hover {
@@ -36,5 +37,5 @@
 }
 
 .background_container_card {
-  height: 60vh;
+  height: 100vh;
 }
