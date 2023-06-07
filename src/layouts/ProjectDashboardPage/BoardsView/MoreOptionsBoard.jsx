@@ -117,8 +117,8 @@ const MoreOptionsBoard = ({ id, label, itemsList }) => {
         overflow: "auto",
       }}
     >
-      <Typography className={style.more_option_btn_text}>Update</Typography>
-      <Typography className={style.more_option_btn_text}>Delete</Typography>
+      {/* <Typography className={style.more_option_btn_text}>Update</Typography> */}
+      {/* <Typography className={style.more_option_btn_text}>Delete</Typography> */}
       {boardColors.map((boardColor, key) => {
         return (
           <Typography

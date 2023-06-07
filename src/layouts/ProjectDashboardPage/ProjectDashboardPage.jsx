@@ -1,6 +1,6 @@
 import { Box, Typography } from "@mui/material";
 import React, { useState } from "react";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { Button, Card, Menu } from "antd";
 import {
   TableOutlined,
@@ -12,6 +12,7 @@ import {
 } from "@ant-design/icons";
 import style from "./style.module.css";
 import BoardsView from "./BoardsView/BoardsView";
+import { useSelector } from "react-redux";
 
 const items = [
   {
@@ -19,17 +20,17 @@ const items = [
     key: "boardsView",
     icon: <BarsOutlined />,
   },
-  {
-    label: "Table",
-    key: "tableView",
-    icon: <TableOutlined />,
-  },
-  {
-    label: "Cards",
-    key: "cardsView",
-    icon: <AppstoreOutlined />,
-  },
-  { label: "Calender", key: "calenderView", icon: <CalendarOutlined /> },
+  // {
+  //   label: "Table",
+  //   key: "tableView",
+  //   icon: <TableOutlined />,
+  // },
+  // {
+  //   label: "Cards",
+  //   key: "cardsView",
+  //   icon: <AppstoreOutlined />,
+  // },
+  // { label: "Calender", key: "calenderView", icon: <CalendarOutlined /> },
 ];
 
 const ProjectDashboardPage = () => {
@@ -37,6 +38,16 @@ const ProjectDashboardPage = () => {
   const onClick = (e) => {
     setCurrent(e.key);
   };
+  const projects = useSelector((state) => state.projects.projects);
+  const { id } = useParams();
+  const [projectWithId] = projects.filter((project) => {
+    if (project.projectId === id) {
+      return project;
+    }
+  });
+
+  const navigate = useNavigate();
+
   return (
     <>
       <div className={style.container}>
@@ -49,15 +60,18 @@ const ProjectDashboardPage = () => {
             }}
           >
             <Typography variant="h5" className={style.project_title_heading}>
-              Project 1
+              {projectWithId.projectName}
             </Typography>
             <Box>
-              <Button style={{ marginRight: "0.4rem" }}>
+              <Button
+                style={{ marginRight: "0.4rem" }}
+                onClick={() => navigate(`/projects/${id}/edit`)}
+              >
                 <EditOutlined />
               </Button>
-              <Button>
+              {/* <Button>
                 <DeleteOutlined />
-              </Button>
+              </Button> */}
             </Box>
           </Box>
         </Card>

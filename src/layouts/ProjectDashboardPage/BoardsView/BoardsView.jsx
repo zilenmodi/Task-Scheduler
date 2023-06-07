@@ -111,15 +111,6 @@ function LeadsOverview() {
     for (let i = 0; i < Object.keys(boards).length; ++i) {
       const currentGroup = boards[i];
       groups[currentGroup.id] = i;
-
-      //set key to value
-      // const boardItemsWithValue = {
-      //   ...boards[i],
-      //   itemsList: boards[i].itemsList.map((key) => {
-      //     return newtasksMap.get(key);
-      //   }),
-      // };
-      // items.push(boardItemsWithValue);
     }
     // Set the data.
     setItems(boards);

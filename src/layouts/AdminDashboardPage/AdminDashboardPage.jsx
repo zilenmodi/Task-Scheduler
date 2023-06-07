@@ -23,11 +23,11 @@ const items = [
     key: "employees",
     icon: <UserOutlined />,
   },
-  {
-    label: "Tasks",
-    key: "tasks",
-    icon: <RadarChartOutlined />,
-  },
+  // {
+  //   label: "Tasks",
+  //   key: "tasks",
+  //   icon: <RadarChartOutlined />,
+  // },
 ];
 
 const AdminDashboardPage = () => {

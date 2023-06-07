@@ -51,19 +51,19 @@
 }
 
 .boardItem {
-  margin-bottom: 0.3rem;
+  margin-bottom: 0.5rem;
 }
 
 .board_columns {
   min-width: 280px;
   width: 280px;
   max-height: 58vh;
-  overflow: hidden;
+  overflow: auto;
   height: fit-content;
 }
 
-.board_columns:hover {
-  overflow: auto;
+.board_columns::-webkit-scrollbar {
+  display: none;
 }
 
 .board_column_add_btn,

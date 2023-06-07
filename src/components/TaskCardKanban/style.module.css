@@ -1,0 +1,9 @@
+.taskcard_box_btn {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  background-color: #091e420f;
+  padding: 0.5rem 1rem;
+  color: #172b4d;
+  border-radius: 5px;
+}

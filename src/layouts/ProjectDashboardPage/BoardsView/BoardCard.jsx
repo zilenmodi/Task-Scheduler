@@ -7,6 +7,7 @@ import style from "../style.module.css";
 import { EllipsisOutlined } from "@ant-design/icons";
 import MoreOptionsBoard from "./MoreOptionsBoard";
 import { useNavigate, useParams } from "react-router-dom";
+import TaskCardKanban from "../../../components/TaskCardKanban/TaskCardKanban";
 
 function DroppableList({
   id,
@@ -28,7 +29,7 @@ function DroppableList({
           {...provided.droppableProps}
           ref={provided.innerRef}
           style={{
-            padding: "0.3rem",
+            padding: "0.5rem",
             background: snapshot.isDraggingOver ? "#eee" : bgcolor,
           }}
         >
@@ -121,16 +122,7 @@ function DroppableList({
                   >
                     <Draggable draggableId={item?.id} index={index}>
                       {(provided) => (
-                        <Card
-                          {...provided.draggableProps}
-                          {...provided.dragHandleProps}
-                          ref={provided.innerRef}
-                          bodyStyle={{
-                            padding: "1rem",
-                          }}
-                        >
-                          {item?.label}
-                        </Card>
+                        <TaskCardKanban provided={provided} item={item} />
                       )}
                     </Draggable>
                   </li>
