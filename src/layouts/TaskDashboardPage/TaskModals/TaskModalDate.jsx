@@ -7,6 +7,7 @@ import style from "../style.module.css";
 import { useContext } from "react";
 import { TaskContext } from "../TaskDashboardPage";
 import { DatePicker } from "antd";
+import dayjs from "dayjs";
 
 const { RangePicker } = DatePicker;
 
@@ -23,7 +24,7 @@ const TaskModalDateContent = ({ hide, dates, setDates }) => {
             Choose Date
           </Typography>
           <RangePicker
-            defaultValue={dates}
+            defaultValue={dayjs(dates)}
             onChange={(value) => setDates(value)}
           />
         </Box>

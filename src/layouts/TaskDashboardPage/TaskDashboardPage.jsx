@@ -88,10 +88,16 @@ const TaskDashboardPage = () => {
           <Box>
             <Button
               type="primary"
-              style={{ marginTop: "1rem" }}
+              style={{ marginTop: "1rem", marginRight: "1rem" }}
               onClick={handleSaveTask}
             >
               Save
+            </Button>
+            <Button
+              style={{ marginTop: "1rem" }}
+              onClick={() => navigate(`/projects/${projectId}`)}
+            >
+              Back
             </Button>
           </Box>
         </Card>
