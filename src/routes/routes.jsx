@@ -7,11 +7,14 @@ import NotesContainer from "../containers/NotesContainer/NotesContainer";
 import ProjectDashboardContainer from "../containers/ProjectDashboardContainer/ProjectDashboardContainer";
 import TaskDashboardContainer from "../containers/TaskDashboardContainer/TaskDashboardContainer";
 import TodaysTaskConatiner from "../containers/TodaysTaskContainer/TodaysTaskConatiner";
+import ErrorPageContainer from "../shared/containers/ErrorPageContainer/ErrorPageContainer";
 import LoginPageContainer from "../shared/containers/LoginPageContainer/LoginPageContainer";
 import SignupPageContainer from "../shared/containers/SignupPageContainer/SignupPageContainer";
 import {
   ADMIN_DASHBOARD,
   ADMIN_DASHBOARD_URL,
+  ERROR_404,
+  ERROR_404_URL,
   LOGIN_PAGE,
   LOGIN_PAGE_URL,
   NOTES,
@@ -101,6 +104,12 @@ export const routersConfig = {
       url: TASKS_ID_URL,
       exact: true,
       component: <TaskDashboardContainer />,
+    },
+    {
+      name: ERROR_404,
+      url: ERROR_404_URL,
+      exact: true,
+      component: <ErrorPageContainer />,
     },
   ],
 };

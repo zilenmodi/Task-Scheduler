@@ -1,0 +1,9 @@
+.container {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: url("https://images5.alphacoders.com/128/1280267.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+}

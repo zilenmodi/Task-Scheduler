@@ -13,6 +13,7 @@ import {
 import style from "./style.module.css";
 import BoardsView from "./BoardsView/BoardsView";
 import { useSelector } from "react-redux";
+import { useEffect } from "react";
 
 const items = [
   {
@@ -40,13 +41,18 @@ const ProjectDashboardPage = () => {
   };
   const projects = useSelector((state) => state.projects.projects);
   const { id } = useParams();
-  const [projectWithId] = projects.filter((project) => {
-    if (project.projectId === id) {
+  const [projectWithId] = projects?.filter((project) => {
+    if (project?.projectId === id) {
       return project;
     }
   });
 
   const navigate = useNavigate();
+  useEffect(() => {
+    if (!projectWithId) {
+      navigate("/*");
+    }
+  }, []);
 
   return (
     <>
@@ -60,7 +66,7 @@ const ProjectDashboardPage = () => {
             }}
           >
             <Typography variant="h5" className={style.project_title_heading}>
-              {projectWithId.projectName}
+              {projectWithId?.projectName}
             </Typography>
             <Box>
               <Button

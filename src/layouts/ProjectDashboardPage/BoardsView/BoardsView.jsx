@@ -9,13 +9,14 @@ import { CloseOutlined } from "@ant-design/icons";
 import { nanoid } from "@reduxjs/toolkit";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   addBoardProject,
   addNewTaskProject,
   updateBoardPositions,
 } from "../../../redux/projectsSlice/projectsSlice";
 import DroppableList from "./BoardCard";
+import ErrorPageContainer from "../../../shared/containers/ErrorPageContainer/ErrorPageContainer";
 
 const boardColors = [
   {
@@ -93,10 +94,16 @@ function LeadsOverview() {
   const dispatch = useDispatch();
   const { id: projectId } = useParams();
   const [projectWithId] = projects?.filter(
-    (project) => project.projectId === projectId
+    (project) => project?.projectId === projectId
   );
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (!projectWithId) {
+      navigate("/*");
+    }
+  }, []);
   const newtasksMap = new Map();
-  projectWithId.tasks.map((task) => {
+  projectWithId?.tasks?.map((task) => {
     newtasksMap.set(task.id, task);
   });
 

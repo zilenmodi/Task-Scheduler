@@ -10,6 +10,7 @@ import { createContext } from "react";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { updateTaskProject } from "../../redux/projectsSlice/projectsSlice";
+import { useEffect } from "react";
 
 export const TaskContext = createContext();
 
@@ -22,18 +23,29 @@ const TaskDashboardPage = () => {
   const [projectWithId] = projects?.filter(
     (project) => project.projectId === projectId
   );
-  const alltasks = projectWithId.tasks;
+  useEffect(() => {
+    if (!projectWithId) {
+      navigate("/*");
+    }
+  }, [projectWithId]);
+  const alltasks = projectWithId?.tasks;
   const [taskWithId] = alltasks.filter((task) => task.id === taskId);
 
+  useEffect(() => {
+    if (!taskWithId) {
+      navigate("/*");
+    }
+  }, [taskWithId]);
+
   const [taskDetails, setTaskDetails] = useState({
-    coverImage: taskWithId.coverImage ?? "",
-    labelsList: taskWithId.labelsList ?? [],
-    checklists: taskWithId.checklists ?? [],
-    dates: taskWithId.dates ?? null,
-    attachmentUrl: taskWithId.attachmentUrl ?? "",
-    allLabelsList: taskWithId.allLabelsList ?? [],
-    imageFileList: taskWithId.imageFileList ?? [],
-    description: taskWithId.description ?? "",
+    coverImage: taskWithId?.coverImage ?? "",
+    labelsList: taskWithId?.labelsList ?? [],
+    checklists: taskWithId?.checklists ?? [],
+    dates: taskWithId?.dates ?? null,
+    attachmentUrl: taskWithId?.attachmentUrl ?? "",
+    allLabelsList: taskWithId?.allLabelsList ?? [],
+    imageFileList: taskWithId?.imageFileList ?? [],
+    description: taskWithId?.description ?? "",
   });
 
   const handleSaveTask = () => {
@@ -62,7 +74,7 @@ const TaskDashboardPage = () => {
             }}
           >
             <Typography variant="h5" className={style.project_title_heading}>
-              {taskWithId.label}
+              {taskWithId?.label}
             </Typography>
             <Box>
               {/* <Button style={{ marginRight: "0.4rem" }}>
