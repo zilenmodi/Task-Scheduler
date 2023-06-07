@@ -2,6 +2,14 @@
 
 This is a task scheduling web application designed to help admins manage projects, employees, and tasks efficiently. It provides a user-friendly interface with various features such as project creation, employee management, task assignment, filtering and sorting projects, creating boards for projects, drag-and-drop functionality, and adding details to individual tasks.
 
+## Snapshots
+
+![Image 1](./src/assets/ss1.png)
+
+![Imag 2](./src/assets/ss2.png)
+
+![Imag 3](./src/assets/ss3.png)
+
 ## Features
 
 1. **Project Management:**
