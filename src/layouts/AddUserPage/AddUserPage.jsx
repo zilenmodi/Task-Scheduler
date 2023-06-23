@@ -16,6 +16,7 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router";
 import { addNewUser } from "../../redux/usersSlice/usersSlice";
 import TextArea from "antd/es/input/TextArea";
+import { useSelector } from "react-redux";
 
 const jobTitleOptions = [
   {
@@ -140,6 +141,8 @@ const branchOptions = [
 ];
 
 const AddUserPage = ({ projectOptions }) => {
+  const adminId = useSelector((state) => state.auth.userDetails.uid);
+  console.log(adminId, addNewUser);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const initialValue = {
@@ -159,7 +162,6 @@ const AddUserPage = ({ projectOptions }) => {
 
   const onFinishForm = (values) => {
     const newUser = {
-      userId: nanoid(),
       firstName: values.firstName,
       lastName: values.lastName,
       email: values.email,
@@ -172,6 +174,7 @@ const AddUserPage = ({ projectOptions }) => {
       jobTitle: values.jobTitle,
       collegeName: values.collegeName,
       branchName: values.branchName,
+      createdBy: adminId,
     };
 
     dispatch(addNewUser(newUser));

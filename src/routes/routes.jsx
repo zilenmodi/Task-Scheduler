@@ -40,18 +40,6 @@ import {
 export const routersConfig = {
   routes: [
     {
-      name: LOGIN_PAGE,
-      url: LOGIN_PAGE_URL,
-      exact: true,
-      component: <LoginPageContainer />,
-    },
-    {
-      name: SIGN_UP_PAGE,
-      url: SIGN_UP_PAGE_URL,
-      exact: true,
-      component: <SignupPageContainer />,
-    },
-    {
       name: ADMIN_DASHBOARD,
       url: ADMIN_DASHBOARD_URL,
       exact: true,
@@ -110,6 +98,23 @@ export const routersConfig = {
       url: ERROR_404_URL,
       exact: true,
       component: <ErrorPageContainer />,
+    },
+  ],
+};
+
+export const authRoutersConfig = {
+  routes: [
+    {
+      name: LOGIN_PAGE,
+      url: LOGIN_PAGE_URL,
+      exact: true,
+      component: <LoginPageContainer />,
+    },
+    {
+      name: SIGN_UP_PAGE,
+      url: SIGN_UP_PAGE_URL,
+      exact: true,
+      component: <SignupPageContainer />,
     },
   ],
 };

@@ -4,6 +4,8 @@ import {
   deleteProject,
   updateProject,
 } from "../projectsSlice/projectsSlice";
+import { updateUsersDatabase, auth } from "../../Helper/firebasedb";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 
 const initialState = {
   users: JSON.parse(localStorage.getItem("users")) || [],
@@ -20,14 +22,41 @@ export const fetchUsers = createAsyncThunk("users/fetchUsers", async () => {
   }
 });
 
+export const addNewUser = createAsyncThunk(
+  "user/addNewUser",
+  async ({ values, navigate }) => {
+    try {
+      console.log("hiii user");
+      const response = await createUserWithEmailAndPassword(
+        auth,
+        values.email,
+        "12345678"
+      );
+
+      const userId = response.user.uid;
+
+      await updateUsersDatabase(
+        {
+          values,
+        },
+        userId
+      );
+
+      return { email: values.email, uid: userId };
+    } catch (error) {
+      return error.message;
+    }
+  }
+);
+
 const usersSlice = createSlice({
   name: "usersSlice",
   initialState,
   reducers: {
-    addNewUser: (state, action) => {
-      state.users.push(action.payload);
-      localStorage.setItem("users", JSON.stringify(state.users));
-    },
+    // addNewUser: (state, action) => {
+    //   state.users.push(action.payload);
+    //   localStorage.setItem("users", JSON.stringify(state.users));
+    // },
     deleteUser: (state, action) => {
       const newUsersList = state.users.filter(
         (user) => user.userId !== action.payload
@@ -127,4 +156,4 @@ const usersSlice = createSlice({
 });
 
 export default usersSlice.reducer;
-export const { addNewUser, deleteUser, updateUser } = usersSlice.actions;
+export const { deleteUser, updateUser } = usersSlice.actions;
