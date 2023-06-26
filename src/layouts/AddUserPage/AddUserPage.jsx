@@ -177,7 +177,9 @@ const AddUserPage = ({ projectOptions }) => {
       createdBy: adminId,
     };
 
-    dispatch(addNewUser(newUser));
+    console.log(newUser);
+
+    dispatch(addNewUser({ newUser, navigate }));
 
     navigate("/admin/dashboard");
   };

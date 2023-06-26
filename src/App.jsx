@@ -10,7 +10,6 @@ import { useSelector } from "react-redux";
 
 function App() {
   const authenticate = useSelector((state) => state.auth.authenticate);
-  console.log(authenticate);
   return (
     <>
       <Router>

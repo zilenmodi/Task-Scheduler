@@ -23,6 +23,7 @@ import {
   uploadBytesResumable,
   getDownloadURL,
 } from "firebase/storage";
+import firebase from "firebase/compat/app";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBFrVe1wGGl6Yu-Uicgew09oxkOMsCxcZo",
@@ -34,6 +35,7 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
+firebase.initializeApp(firebaseConfig);
 const app = initializeApp(firebaseConfig);
 const database = getFirestore(app);
 const storage = getStorage(app);
@@ -50,7 +52,38 @@ const updateUsersDatabase = async (user, uid) => {
   if (typeof user !== "object") return;
 
   const docRef = doc(database, `users`, uid);
-  await setDoc(docRef, { ...user, uid });
+  await setDoc(docRef, { ...user.values, userId: uid });
 };
 
-export { auth, updateAdminsDatabase, updateUsersDatabase };
+const getUsersFromDatabase = async (adminId) => {
+  try {
+    const usersCollections = collection(database, "users");
+    const querySnapshot = await getDocs(usersCollections);
+    const documents = [];
+    querySnapshot.forEach((doc) => {
+      if (doc.data().createdBy === adminId) {
+        documents.push({ ...doc.data() });
+      }
+    });
+    return documents;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+const updateIndUserDatabase = async (user) => {
+  try {
+    const docRef = doc(database, "users", user.userId);
+    await updateDoc(docRef, user);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export {
+  auth,
+  updateAdminsDatabase,
+  updateUsersDatabase,
+  getUsersFromDatabase,
+  updateIndUserDatabase,
+};

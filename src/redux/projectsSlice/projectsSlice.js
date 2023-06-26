@@ -155,54 +155,54 @@ const projectsSlice = createSlice({
       state.status = "failed";
       state.error = action.payload.error;
     });
-    builder.addCase(addNewUser, (state, action) => {
-      const projectsWhichAdded = action.payload.assignProjects;
-      const userId = action.payload.userId;
-      const updatedProjects = state.projects.map((project) => {
-        if (projectsWhichAdded.includes(project.projectId)) {
-          return { ...project, assignTo: [...project.assignTo, userId] };
-        }
-        return project;
-      });
-      state.projects = updatedProjects;
-      localStorage.setItem("projects", JSON.stringify(state.projects));
-    });
-    builder.addCase(updateUser, (state, action) => {
-      const userId = action.payload.userId;
-      const projectsWithoutCurrUID = state.projects.map((project) => {
-        if (project?.assignTo?.includes(userId)) {
-          const index = project?.assignTo?.indexOf(userId);
-          const removedAssignUsers = project.assignTo;
-          removedAssignUsers.splice(index, 1);
-          return { ...project, assignTo: removedAssignUsers };
-        }
-        return project;
-      });
+    // builder.addCase(addNewUser, (state, action) => {
+    //   const projectsWhichAdded = action.payload.assignProjects;
+    //   const userId = action.payload.userId;
+    //   const updatedProjects = state.projects.map((project) => {
+    //     if (projectsWhichAdded.includes(project.projectId)) {
+    //       return { ...project, assignTo: [...project.assignTo, userId] };
+    //     }
+    //     return project;
+    //   });
+    //   state.projects = updatedProjects;
+    //   localStorage.setItem("projects", JSON.stringify(state.projects));
+    // });
+    // builder.addCase(updateUser, (state, action) => {
+    //   const userId = action.payload.userId;
+    //   const projectsWithoutCurrUID = state.projects.map((project) => {
+    //     if (project?.assignTo?.includes(userId)) {
+    //       const index = project?.assignTo?.indexOf(userId);
+    //       const removedAssignUsers = project.assignTo;
+    //       removedAssignUsers.splice(index, 1);
+    //       return { ...project, assignTo: removedAssignUsers };
+    //     }
+    //     return project;
+    //   });
 
-      const projectsWhichAdded = action.payload.assignProjects;
-      const updatedProjects = projectsWithoutCurrUID.map((project) => {
-        if (projectsWhichAdded.includes(project.projectId)) {
-          return { ...project, assignTo: [...project.assignTo, userId] };
-        }
-        return project;
-      });
-      state.projects = updatedProjects;
-      localStorage.setItem("projects", JSON.stringify(state.projects));
-    });
-    builder.addCase(deleteUser, (state, action) => {
-      const userId = action.payload;
-      const projectsWithoutCurrUID = state.projects.map((project) => {
-        if (project?.assignTo?.includes(userId)) {
-          const index = project?.assignTo?.indexOf(userId);
-          const removedAssignUsers = project.assignTo;
-          removedAssignUsers.splice(index, 1);
-          return { ...project, assignTo: removedAssignUsers };
-        }
-        return project;
-      });
-      state.projects = projectsWithoutCurrUID;
-      localStorage.setItem("projects", JSON.stringify(state.projects));
-    });
+    //   const projectsWhichAdded = action.payload.assignProjects;
+    //   const updatedProjects = projectsWithoutCurrUID.map((project) => {
+    //     if (projectsWhichAdded.includes(project.projectId)) {
+    //       return { ...project, assignTo: [...project.assignTo, userId] };
+    //     }
+    //     return project;
+    //   });
+    //   state.projects = updatedProjects;
+    //   localStorage.setItem("projects", JSON.stringify(state.projects));
+    // });
+    // builder.addCase(deleteUser, (state, action) => {
+    //   const userId = action.payload;
+    //   const projectsWithoutCurrUID = state.projects.map((project) => {
+    //     if (project?.assignTo?.includes(userId)) {
+    //       const index = project?.assignTo?.indexOf(userId);
+    //       const removedAssignUsers = project.assignTo;
+    //       removedAssignUsers.splice(index, 1);
+    //       return { ...project, assignTo: removedAssignUsers };
+    //     }
+    //     return project;
+    //   });
+    //   state.projects = projectsWithoutCurrUID;
+    //   localStorage.setItem("projects", JSON.stringify(state.projects));
+    // });
   },
 });
 

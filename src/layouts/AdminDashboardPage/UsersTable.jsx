@@ -32,10 +32,6 @@ const UsersTable = () => {
   const users = useSelector((state) => state.users.users);
   const status = useSelector((state) => state.users.status);
 
-  if (status === "pending") {
-    return <h1>Loading</h1>;
-  }
-
   const columns = [
     {
       title: "First Name",
@@ -162,6 +158,7 @@ const UsersTable = () => {
           showSizeChanger: true,
           pageSizeOptions: ["5", "10"],
         }}
+        loading={status == "pending" ? true : false}
       />
     </>
   );
