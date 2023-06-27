@@ -14,13 +14,10 @@ import { useSelector } from "react-redux";
 const Header = () => {
   const projects = useSelector((state) => state.projects.projects);
   const users = useSelector((state) => state.users.users);
-  const totalTasks = projects?.reduce((prevCount, project) => {
-    const tempTasks = project?.tasks?.reduce((count, task) => {
-      return count + 1;
-    }, 0);
+  const totalTasks = 0;
 
-    return prevCount + tempTasks;
-  }, 0);
+  // console.log("projects", projects);
+
   return (
     <>
       <Row gutter={[16, 16]}>

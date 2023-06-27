@@ -45,7 +45,7 @@ const AdminSidebar = () => {
       "Teams Projects",
       "sub1",
       <ProjectOutlined />,
-      projects.map((project) => {
+      projects?.map((project) => {
         return getItem(project.projectName, `/projects/${project.projectId}`);
       })
     ),
@@ -102,7 +102,7 @@ const AdminSidebar = () => {
           }
           style={{
             height: "2.2rem",
-            width: "2.2rem"
+            width: "2.2rem",
           }}
         />
         <Drawer

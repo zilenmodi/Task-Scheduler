@@ -113,10 +113,30 @@ const getProjectFromDatabase = async (adminId) => {
       if (doc.data().createdBy === adminId) {
         documents.push({ ...doc.data() });
       }
-      console.log(doc.data(),adminId);
     });
-    console.log(documents);
     return documents;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+const updateIndProjectDatabase = async (project) => {
+  try {
+    const docRef = doc(database, "projects", project.projectId);
+    await updateDoc(docRef, project);
+    const projects = await getProjectFromDatabase(token.userDetails.uid);
+    return projects;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+const deleteIndProject = async (pid) => {
+  try {
+    const docRef = doc(database, "projects", pid);
+    await deleteDoc(docRef);
+    const projects = await getProjectFromDatabase(token.userDetails.uid);
+    return projects;
   } catch (err) {
     console.log(err);
   }
@@ -131,4 +151,6 @@ export {
   deleteIndUser,
   updateProjectsDatabase,
   getProjectFromDatabase,
+  updateIndProjectDatabase,
+  deleteIndProject,
 };

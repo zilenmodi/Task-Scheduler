@@ -3,6 +3,8 @@ import { addNewUser, deleteUser, updateUser } from "../usersSlice/usersSlice";
 import {
   getProjectFromDatabase,
   updateProjectsDatabase,
+  updateIndProjectDatabase,
+  deleteIndProject,
 } from "../../Helper/firebasedb";
 
 const initialState = {
@@ -11,12 +13,12 @@ const initialState = {
   error: "",
 };
 
+// complete
 export const fetchProjects = createAsyncThunk(
   "projects/fetchProjects",
   async (adminId) => {
     try {
       const adminProjects = await getProjectFromDatabase(adminId);
-      console.log(adminProjects);
       return adminProjects ?? [];
     } catch (error) {
       return error.message;
@@ -24,6 +26,7 @@ export const fetchProjects = createAsyncThunk(
   }
 );
 
+// complete
 export const addNewProject = createAsyncThunk(
   "project/addNewProject",
   async ({ newProject, navigate }) => {
@@ -37,27 +40,36 @@ export const addNewProject = createAsyncThunk(
   }
 );
 
+// complete
+export const updateProject = createAsyncThunk(
+  "project/updateProject",
+  async ({ updatedProject, navigate }) => {
+    try {
+      const newProjects = await updateIndProjectDatabase(updatedProject);
+      navigate("/admin/dashboard");
+      return newProjects ?? [];
+    } catch (error) {
+      return error.message;
+    }
+  }
+);
+
+export const deleteProject = createAsyncThunk(
+  "project/deleteProject",
+  async (pid) => {
+    try {
+      const newProjects = await deleteIndProject(pid);
+      return newProjects ?? [];
+    } catch (error) {
+      return error.message;
+    }
+  }
+);
+
 const projectsSlice = createSlice({
   name: "projectsSlice",
   initialState,
   reducers: {
-    deleteProject: (state, action) => {
-      const newProjects = state.projects.filter(
-        (project) => project.projectId !== action.payload
-      );
-      state.projects = newProjects;
-      localStorage.setItem("projects", JSON.stringify(state.projects));
-    },
-    updateProject: (state, action) => {
-      const newProjects = state.projects.map((project) => {
-        if (project.projectId === action.payload.projectId) {
-          return action.payload;
-        }
-        return project;
-      });
-      state.projects = newProjects;
-      localStorage.setItem("projects", JSON.stringify(state.projects));
-    },
     addBoardProject: (state, action) => {
       const newProjects = state.projects.map((project) => {
         if (project.projectId === action.payload.projectId) {
@@ -128,7 +140,6 @@ const projectsSlice = createSlice({
         }
         return project;
       });
-      // console.log(updatedProjects);
       state.projects = updatedProjects;
       localStorage.setItem("projects", JSON.stringify(state.projects));
     },
@@ -175,6 +186,17 @@ const projectsSlice = createSlice({
         state.projects.push(action.payload);
       })
       .addCase(addNewProject.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload.error;
+      })
+      .addCase(deleteProject.pending, (state) => {
+        state.status = "pending";
+      })
+      .addCase(deleteProject.fulfilled, (state, action) => {
+        state.status = "succeed";
+        state.projects = action.payload ?? [];
+      })
+      .addCase(deleteProject.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.payload.error;
       });
@@ -231,8 +253,6 @@ const projectsSlice = createSlice({
 
 export default projectsSlice.reducer;
 export const {
-  deleteProject,
-  updateProject,
   addBoardProject,
   updateBoardProject,
   updateBoardPositions,

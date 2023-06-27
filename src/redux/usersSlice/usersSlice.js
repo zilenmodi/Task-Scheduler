@@ -19,6 +19,7 @@ const initialState = {
   error: "",
 };
 
+// complete
 export const fetchUsers = createAsyncThunk(
   "users/fetchUsers",
   async (adminId) => {
@@ -31,6 +32,7 @@ export const fetchUsers = createAsyncThunk(
   }
 );
 
+// complete
 export const addNewUser = createAsyncThunk(
   "user/addNewUser",
   async ({ newUser: values, navigate }) => {
@@ -49,7 +51,7 @@ export const addNewUser = createAsyncThunk(
         },
         userId
       );
-
+      // navigate("/admin/dashboard");
       return { ...values, userId };
     } catch (error) {
       return error.message;
@@ -127,72 +129,72 @@ const usersSlice = createSlice({
       .addCase(deleteUser.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.payload.error;
-      })
-      .addCase(addNewProject, (state, action) => {
-        const usersWhichAdded = action.payload.assignTo;
-        const projectId = action.payload.projectId;
-        const updatedUsers = state.users.map((user) => {
-          if (usersWhichAdded.includes(user.userId)) {
-            return {
-              ...user,
-              assignProjects: [...user.assignProjects, projectId],
-            };
-          }
-          return user;
-        });
-        state.users = updatedUsers;
-        localStorage.setItem("users", JSON.stringify(state.users));
-      })
-      .addCase(updateProject, (state, action) => {
-        const usersWhichAdded = action.payload.assignTo;
-        const projectId = action.payload.projectId;
-
-        const usersWithoutCurrPID = state.users.map((user) => {
-          console.log(state.users);
-          if (user?.assignProjects?.includes(projectId)) {
-            const index = user.assignProjects.indexOf(projectId);
-            const removedAssignProjects = user.assignProjects;
-            removedAssignProjects.splice(index, 1);
-            console.log(removedAssignProjects);
-            return {
-              ...user,
-              assignProjects: removedAssignProjects,
-            };
-          }
-          return user;
-        });
-
-        const updatedUsers = usersWithoutCurrPID.map((user) => {
-          if (usersWhichAdded?.includes(user.userId)) {
-            return {
-              ...user,
-              assignProjects: [...user.assignProjects, projectId],
-            };
-          }
-          return user;
-        });
-        state.users = updatedUsers;
-        localStorage.setItem("users", JSON.stringify(state.users));
-      })
-      .addCase(deleteProject, (state, action) => {
-        const projectId = action.payload;
-
-        const usersWithoutCurrPID = state.users.map((user) => {
-          if (user?.assignProjects?.includes(projectId)) {
-            const index = user.assignProjects.indexOf(projectId);
-            const removedAssignProjects = user.assignProjects;
-            removedAssignProjects.splice(index, 1);
-            return {
-              ...user,
-              assignProjects: removedAssignProjects,
-            };
-          }
-          return user;
-        });
-
-        state.users = usersWithoutCurrPID;
-        localStorage.setItem("users", JSON.stringify(state.users));
       });
+    // .addCase(addNewProject, (state, action) => {
+    //   const usersWhichAdded = action.payload.assignTo;
+    //   const projectId = action.payload.projectId;
+    //   const updatedUsers = state.users.map((user) => {
+    //     if (usersWhichAdded.includes(user.userId)) {
+    //       return {
+    //         ...user,
+    //         assignProjects: [...user.assignProjects, projectId],
+    //       };
+    //     }
+    //     return user;
+    //   });
+    //   state.users = updatedUsers;
+    //   localStorage.setItem("users", JSON.stringify(state.users));
+    // })
+    // .addCase(updateProject, (state, action) => {
+    //   const usersWhichAdded = action.payload.assignTo;
+    //   const projectId = action.payload.projectId;
+
+    //   const usersWithoutCurrPID = state.users.map((user) => {
+    //     console.log(state.users);
+    //     if (user?.assignProjects?.includes(projectId)) {
+    //       const index = user.assignProjects.indexOf(projectId);
+    //       const removedAssignProjects = user.assignProjects;
+    //       removedAssignProjects.splice(index, 1);
+    //       console.log(removedAssignProjects);
+    //       return {
+    //         ...user,
+    //         assignProjects: removedAssignProjects,
+    //       };
+    //     }
+    //     return user;
+    //   });
+
+    //   const updatedUsers = usersWithoutCurrPID.map((user) => {
+    //     if (usersWhichAdded?.includes(user.userId)) {
+    //       return {
+    //         ...user,
+    //         assignProjects: [...user.assignProjects, projectId],
+    //       };
+    //     }
+    //     return user;
+    //   });
+    //   state.users = updatedUsers;
+    //   localStorage.setItem("users", JSON.stringify(state.users));
+    // })
+    // .addCase(deleteProject, (state, action) => {
+    //   const projectId = action.payload;
+
+    //   const usersWithoutCurrPID = state.users.map((user) => {
+    //     if (user?.assignProjects?.includes(projectId)) {
+    //       const index = user.assignProjects.indexOf(projectId);
+    //       const removedAssignProjects = user.assignProjects;
+    //       removedAssignProjects.splice(index, 1);
+    //       return {
+    //         ...user,
+    //         assignProjects: removedAssignProjects,
+    //       };
+    //     }
+    //     return user;
+    //   });
+
+    //   state.users = usersWithoutCurrPID;
+    //   localStorage.setItem("users", JSON.stringify(state.users));
+    // });
   },
 });
 

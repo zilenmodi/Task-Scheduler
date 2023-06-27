@@ -155,10 +155,6 @@ const EditProjectPage = ({ employeeOptions }) => {
     (project) => project.projectId === id
   );
 
-  const [commonProperties, setCommonProperties] = useState(
-    projectWithId?.commonProperties || []
-  );
-
   const initialValue = {
     projectName: projectWithId.projectName,
     assignTo: projectWithId.assignTo,
@@ -171,7 +167,7 @@ const EditProjectPage = ({ employeeOptions }) => {
     const updatedProject = {
       projectId: id,
       projectName: values.projectName,
-      createdBy: values.createdBy,
+      createdBy: projectWithId.createdBy,
       createAt: projectWithId.createAt,
       dueDate: values.dueDate ? values.dueDate.toString() : null,
       boards: projectWithId.boards,
@@ -179,11 +175,8 @@ const EditProjectPage = ({ employeeOptions }) => {
       tags: values.technologies,
       assignTo: values.assignTo,
       priority: values.priority,
-      commonProperties: commonProperties,
     };
-    dispatch(updateProject(updatedProject));
-
-    navigate("/admin/dashboard");
+    dispatch(updateProject({ updatedProject, navigate }));
   };
 
   if (status === "pending") {
