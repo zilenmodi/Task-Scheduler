@@ -16,6 +16,7 @@ import { useDispatch } from "react-redux";
 import { addNewProject } from "../../redux/projectsSlice/projectsSlice";
 import { useNavigate } from "react-router";
 import ExtraFieldsOptions from "../EditProjectPage/ExtraFieldsOptions";
+import { useSelector } from "react-redux";
 
 // const employessOptions = [
 //   {
@@ -141,6 +142,7 @@ const technologiesOptions = [
 ];
 
 const AddProjectPage = ({ employeeOptions }) => {
+  const adminId = useSelector((state) => state.auth.userDetails.uid);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [commonProperties, setCommonProperties] = useState([]);
@@ -156,7 +158,7 @@ const AddProjectPage = ({ employeeOptions }) => {
     const newProject = {
       projectId: nanoid(),
       projectName: values.projectName,
-      createBy: "Zilen Modi",
+      createdBy: adminId,
       createAt: new Date().toString(),
       dueDate: values.dueDate ? values.dueDate.toString() : null,
       boards: [],
@@ -167,9 +169,7 @@ const AddProjectPage = ({ employeeOptions }) => {
       commonProperties: commonProperties,
     };
 
-    dispatch(addNewProject(newProject));
-
-    navigate("/admin/dashboard");
+    dispatch(addNewProject({ newProject, navigate }));
   };
 
   return (

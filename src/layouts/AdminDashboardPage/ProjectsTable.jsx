@@ -94,10 +94,6 @@ const ProjectsTable = () => {
   const projects = useSelector((state) => state.projects.projects);
   const status = useSelector((state) => state.projects.status);
 
-  if (status === "pending") {
-    return <h1>Loading</h1>;
-  }
-
   const columns = [
     {
       title: "Project Name",
@@ -107,11 +103,11 @@ const ProjectsTable = () => {
         <NavLink to={`/projects/${key}`}>{text}</NavLink>
       ),
     },
-    {
-      title: "Create By",
-      dataIndex: "createBy",
-      key: "createBy",
-    },
+    // {
+    //   title: "Create By",
+    //   dataIndex: "createBy",
+    //   key: "createBy",
+    // },
     {
       title: "Assigned To",
       dataIndex: "assignedTo",
@@ -321,6 +317,7 @@ const ProjectsTable = () => {
           showSizeChanger: true,
           pageSizeOptions: ["5", "10"],
         }}
+        loading={status == "pending" ? true : false}
       />
     </>
   );

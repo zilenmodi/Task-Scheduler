@@ -142,7 +142,6 @@ const branchOptions = [
 
 const AddUserPage = ({ projectOptions }) => {
   const adminId = useSelector((state) => state.auth.userDetails.uid);
-  console.log(adminId, addNewUser);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const initialValue = {
@@ -177,11 +176,7 @@ const AddUserPage = ({ projectOptions }) => {
       createdBy: adminId,
     };
 
-    console.log(newUser);
-
     dispatch(addNewUser({ newUser, navigate }));
-
-    navigate("/admin/dashboard");
   };
 
   return (

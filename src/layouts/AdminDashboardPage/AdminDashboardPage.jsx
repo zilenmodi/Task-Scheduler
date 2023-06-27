@@ -14,6 +14,7 @@ import UsersTable from "./UsersTable";
 import { fetchUsers } from "../../redux/usersSlice/usersSlice";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
+import { fetchProjects } from "../../redux/projectsSlice/projectsSlice";
 
 const items = [
   {
@@ -42,6 +43,7 @@ const AdminDashboardPage = () => {
   };
 
   useEffect(() => {
+    dispatch(fetchProjects(adminId));
     dispatch(fetchUsers(adminId));
   }, []);
 

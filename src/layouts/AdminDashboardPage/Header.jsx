@@ -28,14 +28,14 @@ const Header = () => {
           <Tag className={style.dash_card_small} color="blue">
             <ListAltIcon fontSize="medium" sx={{ mb: 2 }} />
             <Typography variant="subtitle1">Projects</Typography>
-            <Typography variant="h6">{projects.length}</Typography>
+            <Typography variant="h6">{projects?.length}</Typography>
           </Tag>
         </Col>
         <Col xs={12} md={8} lg={4}>
           <Tag className={style.dash_card_small} color="purple">
             <SupervisedUserCircleIcon fontSize="medium" sx={{ mb: 2 }} />
             <Typography variant="subtitle1">Employees</Typography>
-            <Typography variant="h6">{users.length}</Typography>
+            <Typography variant="h6">{users?.length}</Typography>
           </Tag>
         </Col>
         <Col xs={12} md={8} lg={4}>

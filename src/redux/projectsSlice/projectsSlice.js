@@ -1,21 +1,36 @@
 import { createAsyncThunk, createSlice, nanoid } from "@reduxjs/toolkit";
 import { addNewUser, deleteUser, updateUser } from "../usersSlice/usersSlice";
+import {
+  getProjectFromDatabase,
+  updateProjectsDatabase,
+} from "../../Helper/firebasedb";
 
 const initialState = {
-  projects: JSON.parse(localStorage.getItem("projects")) || [],
+  projects: [],
   status: "idle",
   error: "",
 };
 
 export const fetchProjects = createAsyncThunk(
   "projects/fetchProjects",
-  async (id) => {
+  async (adminId) => {
     try {
-      const projects = JSON.parse(localStorage.getItem("projects"));
-      const userProjects = projects?.filter(
-        (project) => project.createBy === id
-      );
-      return userProjects ?? [];
+      const adminProjects = await getProjectFromDatabase(adminId);
+      console.log(adminProjects);
+      return adminProjects ?? [];
+    } catch (error) {
+      return error.message;
+    }
+  }
+);
+
+export const addNewProject = createAsyncThunk(
+  "project/addNewProject",
+  async ({ newProject, navigate }) => {
+    try {
+      await updateProjectsDatabase(newProject);
+      navigate("/admin/dashboard");
+      return newProject;
     } catch (error) {
       return error.message;
     }
@@ -26,10 +41,6 @@ const projectsSlice = createSlice({
   name: "projectsSlice",
   initialState,
   reducers: {
-    addNewProject: (state, action) => {
-      state.projects.push(action.payload);
-      localStorage.setItem("projects", JSON.stringify(state.projects));
-    },
     deleteProject: (state, action) => {
       const newProjects = state.projects.filter(
         (project) => project.projectId !== action.payload
@@ -144,17 +155,29 @@ const projectsSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(fetchProjects.pending, (state) => {
-      state.status = "pending";
-    });
-    builder.addCase(fetchProjects.fulfilled, (state, action) => {
-      state.status = "succeed";
-      state.projects = action.payload;
-    });
-    builder.addCase(fetchProjects.rejected, (state, action) => {
-      state.status = "failed";
-      state.error = action.payload.error;
-    });
+    builder
+      .addCase(fetchProjects.pending, (state) => {
+        state.status = "pending";
+      })
+      .addCase(fetchProjects.fulfilled, (state, action) => {
+        state.status = "succeed";
+        state.projects = action.payload;
+      })
+      .addCase(fetchProjects.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload.error;
+      })
+      .addCase(addNewProject.pending, (state) => {
+        state.status = "pending";
+      })
+      .addCase(addNewProject.fulfilled, (state, action) => {
+        state.status = "succeed";
+        state.projects.push(action.payload);
+      })
+      .addCase(addNewProject.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload.error;
+      });
     // builder.addCase(addNewUser, (state, action) => {
     //   const projectsWhichAdded = action.payload.assignProjects;
     //   const userId = action.payload.userId;
@@ -208,7 +231,6 @@ const projectsSlice = createSlice({
 
 export default projectsSlice.reducer;
 export const {
-  addNewProject,
   deleteProject,
   updateProject,
   addBoardProject,

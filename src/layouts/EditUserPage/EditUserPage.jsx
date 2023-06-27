@@ -178,6 +178,7 @@ const EditUserPage = ({ projectOptions }) => {
       jobTitle: values.jobTitle,
       collegeName: values.collegeName,
       branchName: values.branchName,
+      createdBy: values.createdBy,
     };
 
     dispatch(updateUser(updatedUser));

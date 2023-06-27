@@ -171,7 +171,7 @@ const EditProjectPage = ({ employeeOptions }) => {
     const updatedProject = {
       projectId: id,
       projectName: values.projectName,
-      createBy: "Zilen Modi",
+      createdBy: values.createdBy,
       createAt: projectWithId.createAt,
       dueDate: values.dueDate ? values.dueDate.toString() : null,
       boards: projectWithId.boards,

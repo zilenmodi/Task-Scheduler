@@ -37,7 +37,7 @@ const UsersTable = () => {
       title: "First Name",
       dataIndex: "fname",
       key: "fname",
-      minWidth: 500,
+      minWidth: "500px",
     },
     {
       title: "Last Name",

@@ -34,6 +34,8 @@ const firebaseConfig = {
   appId: "1:301180657856:web:76f7e7969b26c1bb300d25",
 };
 
+const token = JSON.parse(localStorage.getItem("token"));
+
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 const app = initializeApp(firebaseConfig);
@@ -75,6 +77,46 @@ const updateIndUserDatabase = async (user) => {
   try {
     const docRef = doc(database, "users", user.userId);
     await updateDoc(docRef, user);
+    const usersDetails = await getUsersFromDatabase(token.userDetails.uid);
+    return usersDetails;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+const deleteIndUser = async (uid) => {
+  try {
+    const docRef = doc(database, "users", uid);
+    await deleteDoc(docRef);
+    const usersDetails = await getUsersFromDatabase(token.userDetails.uid);
+    return usersDetails;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+const updateProjectsDatabase = async (project) => {
+  try {
+    const docRef = doc(database, `projects`, project.projectId);
+    await setDoc(docRef, project);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+const getProjectFromDatabase = async (adminId) => {
+  try {
+    const projectsCollections = collection(database, "projects");
+    const querySnapshot = await getDocs(projectsCollections);
+    const documents = [];
+    querySnapshot.forEach((doc) => {
+      if (doc.data().createdBy === adminId) {
+        documents.push({ ...doc.data() });
+      }
+      console.log(doc.data(),adminId);
+    });
+    console.log(documents);
+    return documents;
   } catch (err) {
     console.log(err);
   }
@@ -86,4 +128,7 @@ export {
   updateUsersDatabase,
   getUsersFromDatabase,
   updateIndUserDatabase,
+  deleteIndUser,
+  updateProjectsDatabase,
+  getProjectFromDatabase,
 };

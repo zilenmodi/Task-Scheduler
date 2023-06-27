@@ -9,6 +9,7 @@ import {
   auth,
   getUsersFromDatabase,
   updateIndUserDatabase,
+  deleteIndUser,
 } from "../../Helper/firebasedb";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 
@@ -34,7 +35,6 @@ export const addNewUser = createAsyncThunk(
   "user/addNewUser",
   async ({ newUser: values, navigate }) => {
     try {
-      console.log(values);
       const response = await createUserWithEmailAndPassword(
         auth,
         values.email,
@@ -61,27 +61,27 @@ export const updateUser = createAsyncThunk(
   "user/updateUser",
   async (updatedUser) => {
     try {
-      console.log(updatedUser);
-      const response = await updateIndUserDatabase(updatedUser);
-      console.log("response", response);
+      const usersDetails = await updateIndUserDatabase(updatedUser);
+      return usersDetails ?? [];
     } catch (error) {
       return error.message;
     }
   }
 );
 
+export const deleteUser = createAsyncThunk("user/deleteUser", async (uid) => {
+  try {
+    const usersDetails = await deleteIndUser(uid);
+    return usersDetails ?? [];
+  } catch (error) {
+    return error.message;
+  }
+});
+
 const usersSlice = createSlice({
   name: "usersSlice",
   initialState,
-  reducers: {
-    deleteUser: (state, action) => {
-      const newUsersList = state.users.filter(
-        (user) => user.userId !== action.payload
-      );
-      state.users = newUsersList;
-      localStorage.setItem("users", JSON.stringify(state.users));
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(fetchUsers.pending, (state) => {
@@ -100,10 +100,31 @@ const usersSlice = createSlice({
       })
       .addCase(addNewUser.fulfilled, (state, action) => {
         state.status = "succeed";
-        console.log(action.payload);
         state.users.push(action.payload);
       })
       .addCase(addNewUser.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload.error;
+      })
+      .addCase(updateUser.pending, (state) => {
+        state.status = "pending";
+      })
+      .addCase(updateUser.fulfilled, (state, action) => {
+        state.status = "succeed";
+        state.users = action.payload;
+      })
+      .addCase(updateUser.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload.error;
+      })
+      .addCase(deleteUser.pending, (state) => {
+        state.status = "pending";
+      })
+      .addCase(deleteUser.fulfilled, (state, action) => {
+        state.status = "succeed";
+        state.users = action.payload;
+      })
+      .addCase(deleteUser.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.payload.error;
       })
@@ -176,4 +197,4 @@ const usersSlice = createSlice({
 });
 
 export default usersSlice.reducer;
-export const { deleteUser } = usersSlice.actions;
+export const {} = usersSlice.actions;
