@@ -12,62 +12,9 @@ import React, { useState } from "react";
 import style from "./style.module.css";
 import { Select, Space } from "antd";
 import { nanoid } from "@reduxjs/toolkit";
-import { useDispatch } from "react-redux";
-import { addNewProject } from "../../redux/projectsSlice/projectsSlice";
 import { useNavigate } from "react-router";
-import ExtraFieldsOptions from "../EditProjectPage/ExtraFieldsOptions";
 import { useSelector } from "react-redux";
-
-// const employessOptions = [
-//   {
-//     label: "Vivek",
-//     value: "Vivek",
-//   },
-//   {
-//     label: "Zilen",
-//     value: "Zilen",
-//   },
-//   {
-//     label: "Abhishek",
-//     value: "Abhishek",
-//   },
-//   {
-//     label: "Ritesh",
-//     value: "Ritesh",
-//   },
-//   {
-//     label: "Honey",
-//     value: "Honey",
-//   },
-//   {
-//     label: "Kashyap",
-//     value: "Kashyap",
-//   },
-//   {
-//     label: "Vanshita",
-//     value: "Vanshita",
-//   },
-//   {
-//     label: "Prince",
-//     value: "Prince",
-//   },
-//   {
-//     label: "Gunjan",
-//     value: "Gunjan",
-//   },
-//   {
-//     label: "Harsh",
-//     value: "Harsh",
-//   },
-//   {
-//     label: "Jupin",
-//     value: "Jupin",
-//   },
-//   {
-//     label: "Vatsal",
-//     value: "Vatsal",
-//   },
-// ];
+import { useCreateProjectsMutation } from "../../Helper/projectsMutations";
 
 const priorityOptions = [
   {
@@ -143,9 +90,7 @@ const technologiesOptions = [
 
 const AddProjectPage = ({ employeeOptions }) => {
   const adminId = useSelector((state) => state.auth.userDetails.uid);
-  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [commonProperties, setCommonProperties] = useState([]);
   const initialValue = {
     projectName: "",
     assignTo: [],
@@ -166,10 +111,9 @@ const AddProjectPage = ({ employeeOptions }) => {
       tags: values.technologies,
       assignTo: values.assignTo,
       priority: values.priority,
-      commonProperties: commonProperties,
     };
-
-    dispatch(addNewProject({ newProject, navigate }));
+    console.log(newProject);
+    // useCreateProjectsMutation().mutate(newProject);
   };
 
   return (

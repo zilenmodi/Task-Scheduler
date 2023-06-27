@@ -3,10 +3,15 @@ import AdminSidebarContainer from "../../shared/containers/AdminSidebarContainer
 import "../../index.css";
 import AddUserPage from "../../layouts/AddUserPage/AddUserPage";
 import { useSelector } from "react-redux";
+import { getProjectFromDatabase } from "../../Helper/firebasedb";
+import { useQuery } from "@tanstack/react-query";
 
 const AddUserContainer = () => {
-  const projects = useSelector((state) => state.projects.projects);
-  const projectOptions = projects.map((project) => {
+  const adminId = useSelector((state) => state.auth.userDetails.uid);
+  const { data: projects } = useQuery(["projects", adminId], () =>
+    getProjectFromDatabase(adminId)
+  );
+  const projectOptions = projects?.map((project) => {
     return {
       label: project.projectName,
       value: project.projectId,

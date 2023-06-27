@@ -24,6 +24,7 @@ import {
   getDownloadURL,
 } from "firebase/storage";
 import firebase from "firebase/compat/app";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBFrVe1wGGl6Yu-Uicgew09oxkOMsCxcZo",
@@ -55,6 +56,18 @@ const updateUsersDatabase = async (user, uid) => {
 
   const docRef = doc(database, `users`, uid);
   await setDoc(docRef, { ...user.values, userId: uid });
+};
+
+const createNewUser = async (user) => {
+  const response = await createUserWithEmailAndPassword(
+    auth,
+    user.email,
+    "12345678"
+  );
+
+  const userId = response.user.uid;
+
+  await updateUsersDatabase(user, userId);
 };
 
 const getUsersFromDatabase = async (adminId) => {
@@ -144,8 +157,10 @@ const deleteIndProject = async (pid) => {
 
 export {
   auth,
+  database,
   updateAdminsDatabase,
   updateUsersDatabase,
+  createNewUser,
   getUsersFromDatabase,
   updateIndUserDatabase,
   deleteIndUser,

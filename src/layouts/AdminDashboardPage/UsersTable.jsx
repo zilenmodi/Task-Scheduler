@@ -3,10 +3,10 @@ import { auto } from "@popperjs/core";
 import { Space, Table, Tag, Button, Pagination } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
-import { useState } from "react";
 import { NavLink } from "react-router-dom";
-import { deleteProject } from "../../redux/projectsSlice/projectsSlice";
 import { deleteUser } from "../../redux/usersSlice/usersSlice";
+import { getUsersFromDatabase } from "../../Helper/firebasedb";
+import { useQuery } from "@tanstack/react-query";
 
 const departmentColors = {
   Python: "gold",
@@ -27,17 +27,20 @@ const departmentColors = {
 };
 
 const UsersTable = () => {
+  const adminId = useSelector((state) => state.auth.userDetails.uid);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const users = useSelector((state) => state.users.users);
-  const status = useSelector((state) => state.users.status);
+  const {
+    data: users,
+    error,
+    isLoading,
+  } = useQuery(["users", adminId], () => getUsersFromDatabase(adminId));
 
   const columns = [
     {
       title: "First Name",
       dataIndex: "fname",
       key: "fname",
-      minWidth: "500px",
     },
     {
       title: "Last Name",
@@ -158,7 +161,7 @@ const UsersTable = () => {
           showSizeChanger: true,
           pageSizeOptions: ["5", "10"],
         }}
-        loading={status == "pending" ? true : false}
+        loading={isLoading}
       />
     </>
   );

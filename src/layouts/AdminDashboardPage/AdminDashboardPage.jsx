@@ -11,10 +11,6 @@ import { Menu } from "antd";
 import { useState } from "react";
 import ProjectsTable from "./ProjectsTable";
 import UsersTable from "./UsersTable";
-import { fetchUsers } from "../../redux/usersSlice/usersSlice";
-import { useDispatch } from "react-redux";
-import { useSelector } from "react-redux";
-import { fetchProjects } from "../../redux/projectsSlice/projectsSlice";
 
 const items = [
   {
@@ -35,17 +31,10 @@ const items = [
 ];
 
 const AdminDashboardPage = () => {
-  const adminId = useSelector((state) => state.auth.userDetails.uid);
-  const dispatch = useDispatch();
   const [current, setCurrent] = useState("projects");
   const onClick = (e) => {
     setCurrent(e.key);
   };
-
-  useEffect(() => {
-    dispatch(fetchProjects(adminId));
-    dispatch(fetchUsers(adminId));
-  }, []);
 
   return (
     <>

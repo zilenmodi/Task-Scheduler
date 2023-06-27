@@ -10,13 +10,23 @@ import AutoModeIcon from "@mui/icons-material/AutoMode";
 import FormatListNumberedIcon from "@mui/icons-material/FormatListNumbered";
 import ComputerIcon from "@mui/icons-material/Computer";
 import { useSelector } from "react-redux";
+import { useQuery } from "@tanstack/react-query";
+import {
+  getProjectFromDatabase,
+  getUsersFromDatabase,
+} from "../../Helper/firebasedb";
 
 const Header = () => {
-  const projects = useSelector((state) => state.projects.projects);
-  const users = useSelector((state) => state.users.users);
-  const totalTasks = 0;
+  const adminId = useSelector((state) => state.auth.userDetails.uid);
+  const { data: projects } = useQuery(["projects", adminId], () =>
+    getProjectFromDatabase(adminId)
+  );
 
-  // console.log("projects", projects);
+  const { data: users } = useQuery(["users", adminId], () =>
+    getUsersFromDatabase(adminId)
+  );
+
+  const totalTasks = 0;
 
   return (
     <>

@@ -1,12 +1,13 @@
 import React from "react";
 import { auto } from "@popperjs/core";
 import { Space, Table, Tag, Button, Select } from "antd";
-import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
-import { deleteProject } from "../../redux/projectsSlice/projectsSlice";
-import { VALUE_SPLIT } from "rc-cascader/lib/utils/commonUtil";
+import { useDeleteProjectsMutation } from "../../Helper/projectsMutations";
+import { useQuery } from "@tanstack/react-query";
+import { useSelector } from "react-redux";
+import { getProjectFromDatabase } from "../../Helper/firebasedb";
 
 const technologiesColors = {
   HTML: "magenta",
@@ -89,10 +90,13 @@ const propertiesOptions = [
 ];
 
 const ProjectsTable = () => {
-  const dispatch = useDispatch();
+  const adminId = useSelector((state) => state.auth.userDetails.uid);
   const navigate = useNavigate();
-  const projects = useSelector((state) => state.projects.projects);
-  const status = useSelector((state) => state.projects.status);
+  const {
+    data: projectsData,
+    error,
+    isLoading,
+  } = useQuery(["projects", adminId], () => getProjectFromDatabase(adminId));
 
   const columns = [
     {
@@ -103,11 +107,6 @@ const ProjectsTable = () => {
         <NavLink to={`/projects/${key}`}>{text}</NavLink>
       ),
     },
-    // {
-    //   title: "Create By",
-    //   dataIndex: "createBy",
-    //   key: "createBy",
-    // },
     {
       title: "Assigned To",
       dataIndex: "assignedTo",
@@ -245,7 +244,9 @@ const ProjectsTable = () => {
       render: (_, { key }) => (
         <Space size="middle">
           <NavLink to={`/projects/${key}/edit`}>Edit</NavLink>
-          <NavLink onClick={() => dispatch(deleteProject(key))}>Delete</NavLink>
+          <NavLink onClick={() => useDeleteProjectsMutation().mutate(key)}>
+            Delete
+          </NavLink>
         </Space>
       ),
     },
@@ -253,7 +254,7 @@ const ProjectsTable = () => {
 
   const [currentColumns, setCurrentColumns] = useState(columns);
 
-  const data = projects?.map((project) => {
+  const data = projectsData?.map((project) => {
     return {
       key: project.projectId,
       name: project.projectName,
@@ -317,7 +318,7 @@ const ProjectsTable = () => {
           showSizeChanger: true,
           pageSizeOptions: ["5", "10"],
         }}
-        loading={status == "pending" ? true : false}
+        loading={isLoading}
       />
     </>
   );

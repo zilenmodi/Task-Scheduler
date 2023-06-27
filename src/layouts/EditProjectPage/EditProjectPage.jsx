@@ -10,67 +10,13 @@ import {
 } from "antd";
 import React, { useState } from "react";
 import style from "./style.module.css";
-import { Select, Space } from "antd";
-import { nanoid } from "@reduxjs/toolkit";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  addNewProject,
-  updateProject,
-} from "../../redux/projectsSlice/projectsSlice";
+import { Select } from "antd";
+import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router";
 import dayjs from "dayjs";
-import ExtraFieldsOptions from "./ExtraFieldsOptions";
-
-const employessOptions = [
-  {
-    label: "Vivek",
-    value: "Vivek",
-  },
-  {
-    label: "Zilen",
-    value: "Zilen",
-  },
-  {
-    label: "Abhishek",
-    value: "Abhishek",
-  },
-  {
-    label: "Ritesh",
-    value: "Ritesh",
-  },
-  {
-    label: "Honey",
-    value: "Honey",
-  },
-  {
-    label: "Kashyap",
-    value: "Kashyap",
-  },
-  {
-    label: "Vanshita",
-    value: "Vanshita",
-  },
-  {
-    label: "Prince",
-    value: "Prince",
-  },
-  {
-    label: "Gunjan",
-    value: "Gunjan",
-  },
-  {
-    label: "Harsh",
-    value: "Harsh",
-  },
-  {
-    label: "Jupin",
-    value: "Jupin",
-  },
-  {
-    label: "Vatsal",
-    value: "Vatsal",
-  },
-];
+import { useUpdateProjectsMutation } from "../../Helper/projectsMutations";
+import { getProjectFromDatabase } from "../../Helper/firebasedb";
+import { useQuery } from "@tanstack/react-query";
 
 const priorityOptions = [
   {
@@ -146,12 +92,15 @@ const technologiesOptions = [
 
 const EditProjectPage = ({ employeeOptions }) => {
   const { id } = useParams();
-  const dispatch = useDispatch();
+  const adminId = useSelector((state) => state.auth.userDetails.uid);
   const navigate = useNavigate();
-  const projects = useSelector((state) => state.projects.projects);
-  const status = useSelector((state) => state.projects.status);
+  const { data: projectsData, isLoading } = useQuery(
+    ["projects", adminId],
+    () => getProjectFromDatabase(adminId)
+  );
+  const updateProjectMutate = useUpdateProjectsMutation();
 
-  const [projectWithId] = projects?.filter(
+  const [projectWithId] = projectsData?.filter(
     (project) => project.projectId === id
   );
 
@@ -176,10 +125,12 @@ const EditProjectPage = ({ employeeOptions }) => {
       assignTo: values.assignTo,
       priority: values.priority,
     };
-    dispatch(updateProject({ updatedProject, navigate }));
+
+    updateProjectMutate.mutate(updatedProject);
+    navigate("/admin/dashboard");
   };
 
-  if (status === "pending") {
+  if (isLoading) {
     return <h1>Loading</h1>;
   }
 

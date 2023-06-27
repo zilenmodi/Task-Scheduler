@@ -17,6 +17,7 @@ import { useNavigate } from "react-router";
 import { addNewUser } from "../../redux/usersSlice/usersSlice";
 import TextArea from "antd/es/input/TextArea";
 import { useSelector } from "react-redux";
+import { useCreateUsersMutation } from "../../Helper/usersMutations";
 
 const jobTitleOptions = [
   {
@@ -142,8 +143,8 @@ const branchOptions = [
 
 const AddUserPage = ({ projectOptions }) => {
   const adminId = useSelector((state) => state.auth.userDetails.uid);
-  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const addUserMutate = useCreateUsersMutation();
   const initialValue = {
     firstName: "",
     lastname: "",
@@ -176,7 +177,7 @@ const AddUserPage = ({ projectOptions }) => {
       createdBy: adminId,
     };
 
-    dispatch(addNewUser({ newUser, navigate }));
+    addUserMutate.mutate(newUser);
   };
 
   return (

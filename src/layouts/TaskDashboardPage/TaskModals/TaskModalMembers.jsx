@@ -5,21 +5,8 @@ import { UserOutlined } from "@ant-design/icons";
 import style from "../style.module.css";
 import { useContext } from "react";
 import { TaskContext } from "../TaskDashboardPage";
-import { useSelector } from "react-redux";
-import { useDispatch } from "react-redux";
-import { useEffect } from "react";
-import { fetchUsers } from "../../../redux/usersSlice/usersSlice";
 
 const TaskModalMembersContent = ({ hide, membersList, setMembersList }) => {
-  const users = useSelector((state) => state.users.users);
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(fetchUsers());
-  }, []);
-
-  console.log(users);
-
   return (
     <>
       <Box

@@ -3,10 +3,15 @@ import AdminSidebarContainer from "../../shared/containers/AdminSidebarContainer
 import "../../index.css";
 import EditProjectPage from "../../layouts/EditProjectPage/EditProjectPage";
 import { useSelector } from "react-redux";
+import { getUsersFromDatabase } from "../../Helper/firebasedb";
+import { useQuery } from "@tanstack/react-query";
 
 const EditProjectContainer = () => {
-  const users = useSelector((state) => state.users.users);
-  const employeeOptions = users.map((user) => {
+  const adminId = useSelector((state) => state.auth.userDetails.uid);
+  const { data: users } = useQuery(["users", adminId], () =>
+    getUsersFromDatabase(adminId)
+  );
+  const employeeOptions = users?.map((user) => {
     return {
       label: `${user.firstName} ${user.lastName}`,
       value: user.userId,

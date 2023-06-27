@@ -1,17 +1,22 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import {
-  addNewProject,
-  deleteProject,
-  updateProject,
-} from "../projectsSlice/projectsSlice";
-import {
   updateUsersDatabase,
   auth,
   getUsersFromDatabase,
   updateIndUserDatabase,
   deleteIndUser,
+  database,
 } from "../../Helper/firebasedb";
+import {
+  collection,
+  doc,
+  getDoc,
+  updateDoc,
+  getDocs,
+} from "firebase/firestore";
 import { createUserWithEmailAndPassword } from "firebase/auth";
+
+const token = JSON.parse(localStorage.getItem("token"));
 
 const initialState = {
   users: [],
@@ -19,27 +24,57 @@ const initialState = {
   error: "",
 };
 
-// complete
-export const fetchUsers = createAsyncThunk(
-  "users/fetchUsers",
-  async (adminId) => {
-    try {
-      const usersDetails = await getUsersFromDatabase(adminId);
-      return usersDetails ?? [];
-    } catch (error) {
-      return error.message;
+const addUserToAssignedProjects = async (newUser) => {
+  const assignedProjects = newUser.assignProjects;
+  assignedProjects?.map(async (projectId) => {
+    const docRef = doc(database, "projects", projectId);
+    const projectData = (await getDoc(docRef)).data();
+    const updatedProjectData = {
+      ...projectData,
+      assignTo: [...projectData.assignTo, newUser.userId],
+    };
+    await updateDoc(docRef, updatedProjectData);
+  });
+};
+
+const deleteUserFromAssignedProjects = async (uid) => {
+  const projectsCollections = collection(database, "projects");
+  const querySnapshot = await getDocs(projectsCollections);
+  const documents = [];
+  querySnapshot.forEach((doc) => {
+    documents.push({ ...doc.data() });
+  });
+
+  documents.map(async (currProjectData) => {
+    const assignedUsers = currProjectData.assignTo;
+    if (assignedUsers.includes(uid)) {
+      const index = assignedUsers.indexOf(uid);
+      assignedUsers.splice(index, 1);
+
+      const updatedProjectData = {
+        ...currProjectData,
+        assignTo: assignedUsers,
+      };
+
+      const docRef = doc(database, "projects", currProjectData.projectId);
+      await updateDoc(docRef, updatedProjectData);
     }
-  }
-);
+  });
+};
+
+const updateUserToAssignedProjects = async (updatedUser) => {
+  await deleteUserFromAssignedProjects(updatedUser.userId);
+  await addUserToAssignedProjects(updatedUser);
+};
 
 // complete
 export const addNewUser = createAsyncThunk(
   "user/addNewUser",
-  async ({ newUser: values, navigate }) => {
+  async (newUser) => {
     try {
       const response = await createUserWithEmailAndPassword(
         auth,
-        values.email,
+        newUser.email,
         "12345678"
       );
 
@@ -47,23 +82,25 @@ export const addNewUser = createAsyncThunk(
 
       await updateUsersDatabase(
         {
-          values,
+          newUser,
         },
         userId
       );
-      // navigate("/admin/dashboard");
-      return { ...values, userId };
+      await addUserToAssignedProjects({ ...newUser, userId });
+      return { ...newUser, userId };
     } catch (error) {
       return error.message;
     }
   }
 );
 
+// complete
 export const updateUser = createAsyncThunk(
   "user/updateUser",
-  async (updatedUser) => {
+  async (updatedUser, callback) => {
     try {
       const usersDetails = await updateIndUserDatabase(updatedUser);
+      await updateUserToAssignedProjects(updatedUser);
       return usersDetails ?? [];
     } catch (error) {
       return error.message;
@@ -71,9 +108,11 @@ export const updateUser = createAsyncThunk(
   }
 );
 
+// complete
 export const deleteUser = createAsyncThunk("user/deleteUser", async (uid) => {
   try {
     const usersDetails = await deleteIndUser(uid);
+    await deleteUserFromAssignedProjects(uid);
     return usersDetails ?? [];
   } catch (error) {
     return error.message;
@@ -86,17 +125,6 @@ const usersSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(fetchUsers.pending, (state) => {
-        state.status = "pending";
-      })
-      .addCase(fetchUsers.fulfilled, (state, action) => {
-        state.status = "succeed";
-        state.users = action.payload;
-      })
-      .addCase(fetchUsers.rejected, (state, action) => {
-        state.status = "failed";
-        state.error = action.payload.error;
-      })
       .addCase(addNewUser.pending, (state) => {
         state.status = "pending";
       })
@@ -130,71 +158,6 @@ const usersSlice = createSlice({
         state.status = "failed";
         state.error = action.payload.error;
       });
-    // .addCase(addNewProject, (state, action) => {
-    //   const usersWhichAdded = action.payload.assignTo;
-    //   const projectId = action.payload.projectId;
-    //   const updatedUsers = state.users.map((user) => {
-    //     if (usersWhichAdded.includes(user.userId)) {
-    //       return {
-    //         ...user,
-    //         assignProjects: [...user.assignProjects, projectId],
-    //       };
-    //     }
-    //     return user;
-    //   });
-    //   state.users = updatedUsers;
-    //   localStorage.setItem("users", JSON.stringify(state.users));
-    // })
-    // .addCase(updateProject, (state, action) => {
-    //   const usersWhichAdded = action.payload.assignTo;
-    //   const projectId = action.payload.projectId;
-
-    //   const usersWithoutCurrPID = state.users.map((user) => {
-    //     console.log(state.users);
-    //     if (user?.assignProjects?.includes(projectId)) {
-    //       const index = user.assignProjects.indexOf(projectId);
-    //       const removedAssignProjects = user.assignProjects;
-    //       removedAssignProjects.splice(index, 1);
-    //       console.log(removedAssignProjects);
-    //       return {
-    //         ...user,
-    //         assignProjects: removedAssignProjects,
-    //       };
-    //     }
-    //     return user;
-    //   });
-
-    //   const updatedUsers = usersWithoutCurrPID.map((user) => {
-    //     if (usersWhichAdded?.includes(user.userId)) {
-    //       return {
-    //         ...user,
-    //         assignProjects: [...user.assignProjects, projectId],
-    //       };
-    //     }
-    //     return user;
-    //   });
-    //   state.users = updatedUsers;
-    //   localStorage.setItem("users", JSON.stringify(state.users));
-    // })
-    // .addCase(deleteProject, (state, action) => {
-    //   const projectId = action.payload;
-
-    //   const usersWithoutCurrPID = state.users.map((user) => {
-    //     if (user?.assignProjects?.includes(projectId)) {
-    //       const index = user.assignProjects.indexOf(projectId);
-    //       const removedAssignProjects = user.assignProjects;
-    //       removedAssignProjects.splice(index, 1);
-    //       return {
-    //         ...user,
-    //         assignProjects: removedAssignProjects,
-    //       };
-    //     }
-    //     return user;
-    //   });
-
-    //   state.users = usersWithoutCurrPID;
-    //   localStorage.setItem("users", JSON.stringify(state.users));
-    // });
   },
 });
 

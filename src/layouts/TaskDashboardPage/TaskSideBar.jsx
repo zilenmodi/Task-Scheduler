@@ -23,7 +23,6 @@ const TaskSideBar = () => {
           Add to Task
         </Typography>
         <Box className={style.taskSidebar_box}>
-          {/* <TaskModalMembers /> */}
           <TaskModalLabels />
           {/* <div className={style.taskSidebar_box_btn}>
             <CheckSquareOutlined />

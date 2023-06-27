@@ -8,14 +8,15 @@ import {
   DatePicker,
   Button,
 } from "antd";
-import React, { useState } from "react";
+import React from "react";
 import style from "./style.module.css";
 import { Select } from "antd";
-import { nanoid } from "@reduxjs/toolkit";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router";
 import { updateUser } from "../../redux/usersSlice/usersSlice";
 import TextArea from "antd/es/input/TextArea";
+import { useQuery } from "@tanstack/react-query";
+import { getUsersFromDatabase } from "../../Helper/firebasedb";
 
 const jobTitleOptions = [
   {
@@ -142,9 +143,11 @@ const branchOptions = [
 const EditUserPage = ({ projectOptions }) => {
   const { id } = useParams();
   const dispatch = useDispatch();
+  const adminId = useSelector((state) => state.auth.userDetails.uid);
   const navigate = useNavigate();
-  const users = useSelector((state) => state.users.users);
-  const status = useSelector((state) => state.users.status);
+  const { data: users } = useQuery(["users", adminId], () =>
+    getUsersFromDatabase(adminId)
+  );
 
   const [userWithId] = users?.filter((user) => user.userId === id);
 
@@ -181,16 +184,18 @@ const EditUserPage = ({ projectOptions }) => {
       createdBy: userWithId.createdBy,
     };
 
-    dispatch(updateUser(updatedUser));
+    function fn() {
+      setTimeout(() => {
+        console.log("hii callback");
+      }, 1000);
+    }
 
-    navigate("/admin/dashboard");
+    dispatch(updateUser(updatedUser, fn));
   };
 
   if (status === "pending") {
     return <h1>Loading</h1>;
   }
-
-  console.log(id);
 
   return (
     <>
