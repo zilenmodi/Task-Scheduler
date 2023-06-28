@@ -11,6 +11,7 @@ import { Box, Typography } from "@mui/material";
 import { useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { updateBoardProject } from "../../../redux/projectsSlice/projectsSlice";
+import { useUpdateBoardsMutation } from "../../../Helper/boardsMutations";
 
 function getItem(label, key, children, type) {
   return {
@@ -91,19 +92,22 @@ const boardColors = [
 const MoreOptionsBoard = ({ id, label, itemsList }) => {
   const { id: projectId } = useParams();
   const dispatch = useDispatch();
+  const boardUpdateMutate = useUpdateBoardsMutation();
   const handleChangeColor = (color) => {
-    const updatedBoard = {
-      id: id,
-      label: label.trim().length ? label : "Untitled",
-      itemsList: itemsList,
+    // const updatedBoard = {
+    //   id: id,
+    //   label: label.trim().length ? label : "Untitled",
+    //   itemsList: itemsList,
+    //   color: color.colorName,
+    //   bgcolor: color.backgroundColorName,
+    // };
+
+    const updatedValues = {
       color: color.colorName,
       bgcolor: color.backgroundColorName,
     };
-    const projectDetails = {
-      projectId,
-      updatedBoard,
-    };
-    dispatch(updateBoardProject(projectDetails));
+
+    // boardUpdateMutate.mutate({ boardId: id, updatedValues });
   };
   return (
     <Box

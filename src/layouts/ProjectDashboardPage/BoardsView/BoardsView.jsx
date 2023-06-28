@@ -11,12 +11,12 @@ import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import {
-  addBoardProject,
   addNewTaskProject,
   updateBoardPositions,
 } from "../../../redux/projectsSlice/projectsSlice";
 import DroppableList from "./BoardCard";
 import ErrorPageContainer from "../../../shared/containers/ErrorPageContainer/ErrorPageContainer";
+import { useCreateBoardsMutation } from "../../../Helper/boardsMutations";
 
 const boardColors = [
   {
@@ -85,23 +85,13 @@ const boardColors = [
   },
 ];
 
-function LeadsOverview() {
+function LeadsOverview({ projectWithId }) {
   const [items, setItems] = useState([]);
   const [groups, setGroups] = useState({});
   const [addBoardOpened, setAddBoardOpend] = useState(false);
   const [currentBoardInput, setCurrentBoardInput] = useState("");
-  const projects = useSelector((state) => state.projects.projects);
   const dispatch = useDispatch();
-  const { id: projectId } = useParams();
-  const [projectWithId] = projects?.filter(
-    (project) => project?.projectId === projectId
-  );
-  const navigate = useNavigate();
-  useEffect(() => {
-    if (!projectWithId) {
-      navigate("/*");
-    }
-  }, []);
+  const createBoardMutate = useCreateBoardsMutation(projectWithId.projectId);
   const newtasksMap = new Map();
   projectWithId?.tasks?.map((task) => {
     newtasksMap.set(task.id, task);
@@ -156,17 +146,13 @@ function LeadsOverview() {
 
   const handleAddnewBoard = (title) => {
     const newBoard = {
-      id: nanoid(),
+      boardId: nanoid(),
       label: title.trim().length ? title : "Untitled",
       itemsList: [],
       color: boardColors[0].colorName,
       bgcolor: boardColors[0].backgroundColorName,
     };
-    const projectDetails = {
-      projectId,
-      newBoard,
-    };
-    dispatch(addBoardProject(projectDetails));
+    createBoardMutate.mutate(newBoard);
     setAddBoardOpend(false);
   };
 
@@ -325,10 +311,10 @@ function LeadsOverview() {
   );
 }
 
-const BoardsView = () => {
+const BoardsView = ({ projectWithId }) => {
   return (
     <>
-      <LeadsOverview />
+      <LeadsOverview projectWithId={projectWithId} />
     </>
   );
 };

@@ -13,7 +13,8 @@ import {
 import style from "./style.module.css";
 import BoardsView from "./BoardsView/BoardsView";
 import { useSelector } from "react-redux";
-import { useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { getProjectFromDatabase } from "../../Helper/firebasedb";
 
 const items = [
   {
@@ -35,24 +36,33 @@ const items = [
 ];
 
 const ProjectDashboardPage = () => {
+  const adminId = useSelector((state) => state.auth.userDetails.uid);
   const [current, setCurrent] = useState("boardsView");
   const onClick = (e) => {
     setCurrent(e.key);
   };
-  const projects = useSelector((state) => state.projects.projects);
+
+  const {
+    data: projectsData,
+    error,
+    isLoading,
+  } = useQuery(["projects"], () => getProjectFromDatabase(adminId));
   const { id } = useParams();
-  const [projectWithId] = projects?.filter((project) => {
+  const navigate = useNavigate();
+
+  if (isLoading) {
+    return <h1>Loading...</h1>;
+  }
+
+  const [projectWithId] = projectsData?.filter((project) => {
     if (project?.projectId === id) {
       return project;
     }
   });
 
-  const navigate = useNavigate();
-  useEffect(() => {
-    if (!projectWithId) {
-      navigate("/*");
-    }
-  }, []);
+  console.log(projectWithId);
+
+  // return <h1>Yes</h1>;
 
   return (
     <>
@@ -75,9 +85,6 @@ const ProjectDashboardPage = () => {
               >
                 <EditOutlined />
               </Button>
-              {/* <Button>
-                <DeleteOutlined />
-              </Button> */}
             </Box>
           </Box>
         </Card>
@@ -88,7 +95,9 @@ const ProjectDashboardPage = () => {
             mode="horizontal"
             items={items}
           />
-          {current === "boardsView" && <BoardsView />}
+          {current === "boardsView" && (
+            <BoardsView projectWithId={projectWithId} />
+          )}
           {/* {current === "employees" && <UsersTable />} */}
         </Card>
       </div>

@@ -35,8 +35,6 @@ const firebaseConfig = {
   appId: "1:301180657856:web:76f7e7969b26c1bb300d25",
 };
 
-const token = JSON.parse(localStorage.getItem("token"));
-
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 const app = initializeApp(firebaseConfig);
@@ -146,6 +144,45 @@ const deleteIndProject = async (pid) => {
   }
 };
 
+const createNewBoardInProject = async (pid, newBoardObject) => {
+  try {
+    const docRef = doc(database, "projects", pid);
+
+    const documentSnapshot = await getDoc(docRef);
+    const documentData = documentSnapshot.data();
+
+    const newArray = [...documentData["boards"], newBoardObject];
+
+    await updateDoc(docRef, {
+      ["boards"]: newArray,
+    });
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+const updateBoardInProject = async (pid, boardId, updatedValues) => {
+  try {
+    const docRef = doc(database, "projects", pid);
+
+    const documentSnapshot = await getDoc(docRef);
+    const documentData = documentSnapshot.data();
+
+    const newArray = documentData["boards"].map((obj) => {
+      if (obj.boardId === boardId) {
+        return { ...obj, ...updatedValues };
+      }
+      return obj;
+    });
+
+    await updateDoc(docRef, {
+      ["boards"]: newArray,
+    });
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 export {
   auth,
   database,
@@ -159,4 +196,6 @@ export {
   getProjectFromDatabase,
   updateIndProjectDatabase,
   deleteIndProject,
+  createNewBoardInProject,
+  updateBoardInProject,
 };

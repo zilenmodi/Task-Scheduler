@@ -23,19 +23,9 @@ const TaskDashboardPage = () => {
   const [projectWithId] = projects?.filter(
     (project) => project.projectId === projectId
   );
-  useEffect(() => {
-    if (!projectWithId) {
-      navigate("/*");
-    }
-  }, [projectWithId]);
+
   const alltasks = projectWithId?.tasks;
   const [taskWithId] = alltasks.filter((task) => task.id === taskId);
-
-  useEffect(() => {
-    if (!taskWithId) {
-      navigate("/*");
-    }
-  }, [taskWithId]);
 
   const [taskDetails, setTaskDetails] = useState({
     coverImage: taskWithId?.coverImage ?? "",

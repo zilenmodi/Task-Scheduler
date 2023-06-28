@@ -10,20 +10,6 @@ const projectsSlice = createSlice({
   name: "projectsSlice",
   initialState,
   reducers: {
-    addBoardProject: (state, action) => {
-      const newProjects = state.projects.map((project) => {
-        if (project.projectId === action.payload.projectId) {
-          const updateProject = {
-            ...project,
-            boards: [...project.boards, action.payload.newBoard],
-          };
-          return updateProject;
-        }
-        return project;
-      });
-      state.projects = newProjects;
-      localStorage.setItem("projects", JSON.stringify(state.projects));
-    },
     updateBoardProject: (state, action) => {
       const projects = JSON.parse(localStorage.getItem("projects"));
       const updatedProjects = projects?.map((project) => {
