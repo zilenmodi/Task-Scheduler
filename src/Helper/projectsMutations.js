@@ -13,17 +13,20 @@ import {
 
 export const useCreateProjectsMutation = () => {
   return useMutation({
-    mutationFn: (body) => {
-      updateProjectsDatabase(body);
-      addProjectToAssignedUsers(body);
+    mutationFn: async (body) => {
+      await updateProjectsDatabase(body);
+      await addProjectToAssignedUsers(body);
     },
     onError: () => {
-      // toast.error('Category update failed !');
       console.log("Project added failed");
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["projects"],
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: ["users"],
       });
       console.log("Project added successfully !");
     },
@@ -33,17 +36,21 @@ export const useCreateProjectsMutation = () => {
 export const useUpdateProjectsMutation = () => {
   return useMutation({
     mutationFn: async (body) => {
-      updateIndProjectDatabase(body);
-      updateProjectToAssignedUsers(body);
+      await updateIndProjectDatabase(body);
+      await updateProjectToAssignedUsers(body);
     },
     onError: () => {
-      // toast.error('Category update failed !');
       console.log("Project updated failed");
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["projects"],
       });
+
+      queryClient.invalidateQueries({
+        queryKey: ["users"],
+      });
+
       console.log("Project updated successfully !");
     },
   });
@@ -51,17 +58,20 @@ export const useUpdateProjectsMutation = () => {
 
 export const useDeleteProjectsMutation = () => {
   return useMutation({
-    mutationFn: (body) => {
-      deleteIndProject(body);
-      deleteProjectFromAssignedUsers(body);
+    mutationFn: async (body) => {
+      await deleteIndProject(body);
+      await deleteProjectFromAssignedUsers(body);
     },
     onError: () => {
-      // toast.error('Category update failed !');
       console.log("Project deleted failed");
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["projects"],
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: ["users"],
       });
       console.log("Project deleted successfully !");
     },

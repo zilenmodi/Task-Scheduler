@@ -13,15 +13,18 @@ import {
 
 export const useCreateUsersMutation = () => {
   return useMutation({
-    mutationFn: (body) => {
-      createNewUser(body);
-      addUserToAssignedProjects(body);
+    mutationFn: async (body) => {
+      const userId = await createNewUser(body);
+      await addUserToAssignedProjects({ ...body, userId });
     },
     onError: () => {
-      // toast.error('Category update failed !');
       console.log("User added failed");
     },
     onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["projects"],
+      });
+
       queryClient.invalidateQueries({
         queryKey: ["users"],
       });
@@ -32,15 +35,18 @@ export const useCreateUsersMutation = () => {
 
 export const useUpdateUsersMutation = () => {
   return useMutation({
-    mutationFn: (body) => {
-      updateIndUserDatabase(body);
-      updateUserToAssignedProjects(body);
+    mutationFn: async (body) => {
+      await updateIndUserDatabase(body);
+      await updateUserToAssignedProjects(body);
     },
     onError: () => {
-      // toast.error('Category update failed !');
       console.log("User updated failed");
     },
     onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["projects"],
+      });
+
       queryClient.invalidateQueries({
         queryKey: ["users"],
       });
@@ -51,15 +57,18 @@ export const useUpdateUsersMutation = () => {
 
 export const useDeleteUsersMutation = () => {
   return useMutation({
-    mutationFn: (body) => {
-      deleteIndUser(body);
-      deleteUserFromAssignedProjects(body);
+    mutationFn: async (body) => {
+      await deleteIndUser(body);
+      await deleteUserFromAssignedProjects(body);
     },
     onError: () => {
-      // toast.error('Category update failed !');
       console.log("User deleted failed");
     },
     onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["projects"],
+      });
+
       queryClient.invalidateQueries({
         queryKey: ["users"],
       });

@@ -64,9 +64,9 @@ const createNewUser = async (user) => {
     user.email,
     "12345678"
   );
-
   const userId = response.user.uid;
   await updateUsersDatabase(user, userId);
+  return userId;
 };
 
 const getUsersFromDatabase = async (adminId) => {

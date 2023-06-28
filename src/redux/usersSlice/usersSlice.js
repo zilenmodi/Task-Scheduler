@@ -1,28 +1,10 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import {
-  updateUsersDatabase,
-  auth,
-  getUsersFromDatabase,
-  updateIndUserDatabase,
-  deleteIndUser,
-  database,
-} from "../../Helper/firebasedb";
-import {
-  collection,
-  doc,
-  getDoc,
-  updateDoc,
-  getDocs,
-} from "firebase/firestore";
-
+import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   users: [],
   status: "idle",
   error: "",
 };
-
-
 
 const usersSlice = createSlice({
   name: "usersSlice",

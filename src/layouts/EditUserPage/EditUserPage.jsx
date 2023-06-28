@@ -1,12 +1,4 @@
-import {
-  Card,
-  Typography,
-  Row,
-  Col,
-  Form,
-  Input,
-  Button,
-} from "antd";
+import { Card, Typography, Row, Col, Form, Input, Button } from "antd";
 import React from "react";
 import style from "./style.module.css";
 import { Select } from "antd";
@@ -147,7 +139,7 @@ const EditUserPage = ({ projectOptions }) => {
   const { data: users } = useQuery(["users"], () =>
     getUsersFromDatabase(adminId)
   );
-  const updateUserMutate = useUpdateUsersMutation();
+  const updateUserMutate = useUpdateUsersMutation(navigate);
 
   const [userWithId] = users?.filter((user) => user.userId === id);
 

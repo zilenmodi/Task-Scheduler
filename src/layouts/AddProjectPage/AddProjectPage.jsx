@@ -113,6 +113,7 @@ const AddProjectPage = ({ employeeOptions }) => {
       assignTo: values.assignTo,
       priority: values.priority,
     };
+
     createProjectMutate.mutate(newProject);
     navigate("/admin/dashboard");
   };
