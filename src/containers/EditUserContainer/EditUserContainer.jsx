@@ -8,7 +8,7 @@ import { useQuery } from "@tanstack/react-query";
 
 const EditUserContainer = () => {
   const adminId = useSelector((state) => state.auth.userDetails.uid);
-  const { data: projects } = useQuery(["projects", adminId], () =>
+  const { data: projects } = useQuery(["projects"], () =>
     getProjectFromDatabase(adminId)
   );
   const projectOptions = projects?.map((project) => {

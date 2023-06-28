@@ -11,10 +11,7 @@ import {
 import React, { useState } from "react";
 import style from "./style.module.css";
 import { Select } from "antd";
-import { nanoid } from "@reduxjs/toolkit";
-import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router";
-import { addNewUser } from "../../redux/usersSlice/usersSlice";
 import TextArea from "antd/es/input/TextArea";
 import { useSelector } from "react-redux";
 import { useCreateUsersMutation } from "../../Helper/usersMutations";
@@ -144,7 +141,7 @@ const branchOptions = [
 const AddUserPage = ({ projectOptions }) => {
   const adminId = useSelector((state) => state.auth.userDetails.uid);
   const navigate = useNavigate();
-  const addUserMutate = useCreateUsersMutation();
+  const createUserMutate = useCreateUsersMutation();
   const initialValue = {
     firstName: "",
     lastname: "",
@@ -177,7 +174,8 @@ const AddUserPage = ({ projectOptions }) => {
       createdBy: adminId,
     };
 
-    addUserMutate.mutate(newUser);
+    createUserMutate.mutate(newUser);
+    navigate("/admin/dashboard");
   };
 
   return (

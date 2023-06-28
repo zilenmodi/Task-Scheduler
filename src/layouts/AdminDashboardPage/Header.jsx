@@ -18,11 +18,11 @@ import {
 
 const Header = () => {
   const adminId = useSelector((state) => state.auth.userDetails.uid);
-  const { data: projects } = useQuery(["projects", adminId], () =>
+  const { data: projects } = useQuery(["projects"], () =>
     getProjectFromDatabase(adminId)
   );
 
-  const { data: users } = useQuery(["users", adminId], () =>
+  const { data: users } = useQuery(["users"], () =>
     getUsersFromDatabase(adminId)
   );
 

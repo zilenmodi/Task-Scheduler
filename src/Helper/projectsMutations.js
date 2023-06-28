@@ -5,10 +5,18 @@ import {
   updateIndProjectDatabase,
   updateProjectsDatabase,
 } from "./firebasedb";
+import {
+  addProjectToAssignedUsers,
+  deleteProjectFromAssignedUsers,
+  updateProjectToAssignedUsers,
+} from "./extraMutations";
 
 export const useCreateProjectsMutation = () => {
   return useMutation({
-    mutationFn: (body) => updateProjectsDatabase(body),
+    mutationFn: (body) => {
+      updateProjectsDatabase(body);
+      addProjectToAssignedUsers(body);
+    },
     onError: () => {
       // toast.error('Category update failed !');
       console.log("Project added failed");
@@ -18,14 +26,16 @@ export const useCreateProjectsMutation = () => {
         queryKey: ["projects"],
       });
       console.log("Project added successfully !");
-      navigate("/admin/dashboard");
     },
   });
 };
 
 export const useUpdateProjectsMutation = () => {
   return useMutation({
-    mutationFn: (body) => updateIndProjectDatabase(body),
+    mutationFn: async (body) => {
+      updateIndProjectDatabase(body);
+      updateProjectToAssignedUsers(body);
+    },
     onError: () => {
       // toast.error('Category update failed !');
       console.log("Project updated failed");
@@ -41,7 +51,10 @@ export const useUpdateProjectsMutation = () => {
 
 export const useDeleteProjectsMutation = () => {
   return useMutation({
-    mutationFn: (body) => deleteIndProject(body),
+    mutationFn: (body) => {
+      deleteIndProject(body);
+      deleteProjectFromAssignedUsers(body);
+    },
     onError: () => {
       // toast.error('Category update failed !');
       console.log("Project deleted failed");

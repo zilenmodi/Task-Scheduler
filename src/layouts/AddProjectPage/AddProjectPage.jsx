@@ -98,6 +98,7 @@ const AddProjectPage = ({ employeeOptions }) => {
     technologies: [],
     dueDate: null,
   };
+  const createProjectMutate = useCreateProjectsMutation();
 
   const onFinishForm = (values) => {
     const newProject = {
@@ -112,8 +113,8 @@ const AddProjectPage = ({ employeeOptions }) => {
       assignTo: values.assignTo,
       priority: values.priority,
     };
-    console.log(newProject);
-    // useCreateProjectsMutation().mutate(newProject);
+    createProjectMutate.mutate(newProject);
+    navigate("/admin/dashboard");
   };
 
   return (

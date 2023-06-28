@@ -4,9 +4,9 @@ import { Space, Table, Tag, Button, Pagination } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import { NavLink } from "react-router-dom";
-import { deleteUser } from "../../redux/usersSlice/usersSlice";
 import { getUsersFromDatabase } from "../../Helper/firebasedb";
 import { useQuery } from "@tanstack/react-query";
+import { useDeleteUsersMutation } from "../../Helper/usersMutations";
 
 const departmentColors = {
   Python: "gold",
@@ -34,7 +34,8 @@ const UsersTable = () => {
     data: users,
     error,
     isLoading,
-  } = useQuery(["users", adminId], () => getUsersFromDatabase(adminId));
+  } = useQuery(["users"], () => getUsersFromDatabase(adminId));
+  const deleteUserMutate = useDeleteUsersMutation();
 
   const columns = [
     {
@@ -103,7 +104,7 @@ const UsersTable = () => {
       render: (_, { key }) => (
         <Space size="middle">
           <NavLink to={`/users/${key}/edit`}>Edit</NavLink>
-          <NavLink onClick={() => dispatch(deleteUser(key))}>Delete</NavLink>
+          <NavLink onClick={() => deleteUserMutate.mutate(key)}>Delete</NavLink>
         </Space>
       ),
     },

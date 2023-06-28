@@ -5,7 +5,6 @@ import {
   Col,
   Form,
   Input,
-  DatePicker,
   Button,
 } from "antd";
 import React from "react";
@@ -13,10 +12,10 @@ import style from "./style.module.css";
 import { Select } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router";
-import { updateUser } from "../../redux/usersSlice/usersSlice";
 import TextArea from "antd/es/input/TextArea";
 import { useQuery } from "@tanstack/react-query";
 import { getUsersFromDatabase } from "../../Helper/firebasedb";
+import { useUpdateUsersMutation } from "../../Helper/usersMutations";
 
 const jobTitleOptions = [
   {
@@ -145,9 +144,10 @@ const EditUserPage = ({ projectOptions }) => {
   const dispatch = useDispatch();
   const adminId = useSelector((state) => state.auth.userDetails.uid);
   const navigate = useNavigate();
-  const { data: users } = useQuery(["users", adminId], () =>
+  const { data: users } = useQuery(["users"], () =>
     getUsersFromDatabase(adminId)
   );
+  const updateUserMutate = useUpdateUsersMutation();
 
   const [userWithId] = users?.filter((user) => user.userId === id);
 
@@ -184,18 +184,9 @@ const EditUserPage = ({ projectOptions }) => {
       createdBy: userWithId.createdBy,
     };
 
-    function fn() {
-      setTimeout(() => {
-        console.log("hii callback");
-      }, 1000);
-    }
-
-    dispatch(updateUser(updatedUser, fn));
+    updateUserMutate.mutate(updatedUser);
+    navigate("/admin/dashboard");
   };
-
-  if (status === "pending") {
-    return <h1>Loading</h1>;
-  }
 
   return (
     <>

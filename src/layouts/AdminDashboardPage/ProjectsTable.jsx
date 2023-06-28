@@ -96,7 +96,8 @@ const ProjectsTable = () => {
     data: projectsData,
     error,
     isLoading,
-  } = useQuery(["projects", adminId], () => getProjectFromDatabase(adminId));
+  } = useQuery(["projects"], () => getProjectFromDatabase(adminId));
+  const deleteProjectMutate = useDeleteProjectsMutation();
 
   const columns = [
     {
@@ -244,7 +245,7 @@ const ProjectsTable = () => {
       render: (_, { key }) => (
         <Space size="middle">
           <NavLink to={`/projects/${key}/edit`}>Edit</NavLink>
-          <NavLink onClick={() => useDeleteProjectsMutation().mutate(key)}>
+          <NavLink onClick={() => deleteProjectMutate.mutate(key)}>
             Delete
           </NavLink>
         </Space>

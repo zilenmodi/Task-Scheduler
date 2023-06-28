@@ -1,60 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { database } from "../../Helper/firebasedb";
-import {
-  collection,
-  doc,
-  getDoc,
-  updateDoc,
-  getDocs,
-} from "firebase/firestore";
 
 const initialState = {
   projects: [],
   status: "idle",
   error: "",
-};
-
-const addProjectToAssignedUsers = async (newProject) => {
-  const assignedUsers = newProject.assignTo;
-  assignedUsers?.map(async (userId) => {
-    const docRef = doc(database, "users", userId);
-    const userData = (await getDoc(docRef)).data();
-    const updatedUserData = {
-      ...userData,
-      assignProjects: [...userData.assignProjects, newProject.projectId],
-    };
-    await updateDoc(docRef, updatedUserData);
-  });
-};
-
-const deleteProjectFromAssignedUsers = async (pid) => {
-  const usersCollections = collection(database, "users");
-  const querySnapshot = await getDocs(usersCollections);
-  const documents = [];
-  querySnapshot.forEach((doc) => {
-    documents.push({ ...doc.data() });
-  });
-
-  documents.map(async (currUserData) => {
-    const assignedProjects = currUserData.assignProjects;
-    if (assignedProjects.includes(pid)) {
-      const index = assignedProjects.indexOf(pid);
-      assignedProjects.splice(index, 1);
-
-      const updatedUserData = {
-        ...currUserData,
-        assignProjects: assignedProjects,
-      };
-
-      const docRef = doc(database, "users", currUserData.userId);
-      await updateDoc(docRef, updatedUserData);
-    }
-  });
-};
-
-const updateProjectToAssignedUsers = async (updatedProject) => {
-  await deleteProjectFromAssignedUsers(updatedProject.projectId);
-  await addProjectToAssignedUsers(updatedProject);
 };
 
 const projectsSlice = createSlice({

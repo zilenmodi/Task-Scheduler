@@ -5,10 +5,18 @@ import {
   createNewUser,
   updateIndUserDatabase,
 } from "./firebasedb";
+import {
+  addUserToAssignedProjects,
+  deleteUserFromAssignedProjects,
+  updateUserToAssignedProjects,
+} from "./extraMutations";
 
 export const useCreateUsersMutation = () => {
   return useMutation({
-    mutationFn: (body) => createNewUser(body),
+    mutationFn: (body) => {
+      createNewUser(body);
+      addUserToAssignedProjects(body);
+    },
     onError: () => {
       // toast.error('Category update failed !');
       console.log("User added failed");
@@ -18,39 +26,44 @@ export const useCreateUsersMutation = () => {
         queryKey: ["users"],
       });
       console.log("User added successfully !");
-      navigate("/admin/dashboard");
     },
   });
 };
 
-// export const useUpdateProjectsMutation = () => {
-//   return useMutation({
-//     mutationFn: (body) => updateIndProjectDatabase(body),
-//     onError: () => {
-//       // toast.error('Category update failed !');
-//       console.log("Project updated failed");
-//     },
-//     onSuccess: () => {
-//       queryClient.invalidateQueries({
-//         queryKey: ["projects", adminId],
-//       });
-//       console.log("Project updated successfully !");
-//     },
-//   });
-// };
+export const useUpdateUsersMutation = () => {
+  return useMutation({
+    mutationFn: (body) => {
+      updateIndUserDatabase(body);
+      updateUserToAssignedProjects(body);
+    },
+    onError: () => {
+      // toast.error('Category update failed !');
+      console.log("User updated failed");
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["users"],
+      });
+      console.log("User updated successfully !");
+    },
+  });
+};
 
-// export const useDeleteProjectsMutation = () => {
-//   return useMutation({
-//     mutationFn: (body) => deleteIndProject(body),
-//     onError: () => {
-//       // toast.error('Category update failed !');
-//       console.log("Project deleted failed");
-//     },
-//     onSuccess: () => {
-//       queryClient.invalidateQueries({
-//         queryKey: ["projects", adminId],
-//       });
-//       console.log("Project deleted successfully !");
-//     },
-//   });
-// };
+export const useDeleteUsersMutation = () => {
+  return useMutation({
+    mutationFn: (body) => {
+      deleteIndUser(body);
+      deleteUserFromAssignedProjects(body);
+    },
+    onError: () => {
+      // toast.error('Category update failed !');
+      console.log("User deleted failed");
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["users"],
+      });
+      console.log("User deleted successfully !");
+    },
+  });
+};

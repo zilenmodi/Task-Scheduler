@@ -95,7 +95,7 @@ const EditProjectPage = ({ employeeOptions }) => {
   const adminId = useSelector((state) => state.auth.userDetails.uid);
   const navigate = useNavigate();
   const { data: projectsData, isLoading } = useQuery(
-    ["projects", adminId],
+    ["projects"],
     () => getProjectFromDatabase(adminId)
   );
   const updateProjectMutate = useUpdateProjectsMutation();

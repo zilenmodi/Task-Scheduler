@@ -15,6 +15,8 @@ import { useLocation, useNavigate } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import LogoImage from "../../../assets/dark-logo.svg";
 import style from "./style.module.css";
+import { useQuery } from "@tanstack/react-query";
+import { getProjectFromDatabase } from "../../../Helper/firebasedb";
 
 function getItem(label, key, icon, children, type) {
   return {
@@ -27,25 +29,25 @@ function getItem(label, key, icon, children, type) {
 }
 
 const AdminSidebar = () => {
+  const adminId = useSelector((state) => state.auth.userDetails.uid);
   const navigate = useNavigate();
   const location = useLocation();
-  const projects = useSelector((state) => state.projects.projects);
-  const status = useSelector((state) => state.projects.status);
   const [open, setOpen] = useState(false);
-
-  if (status === "pending") {
-    return <h1>Loading</h1>;
-  }
+  const {
+    data: projectsData,
+    error,
+    isLoading,
+  } = useQuery(["projects"], () => getProjectFromDatabase(adminId));
 
   const items = [
     getItem("Dashboard", "/admin/dashboard", <PieChartOutlined />),
-    // getItem("Today's Task", "/todays-tasks", <DesktopOutlined />),
-    // getItem("Notes", "/notes", <ContainerOutlined />),
+    getItem("Today's Task", "/todays-tasks", <DesktopOutlined />),
+    getItem("Notes", "/notes", <ContainerOutlined />),
     getItem(
       "Teams Projects",
       "sub1",
       <ProjectOutlined />,
-      projects?.map((project) => {
+      projectsData?.map((project) => {
         return getItem(project.projectName, `/projects/${project.projectId}`);
       })
     ),
@@ -66,6 +68,9 @@ const AdminSidebar = () => {
     setOpen(false);
   };
 
+  if (isLoading) {
+    return <h1>Loading</h1>;
+  }
   return (
     <>
       <div

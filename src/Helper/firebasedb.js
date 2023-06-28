@@ -54,8 +54,8 @@ const updateAdminsDatabase = async (user, uid) => {
 const updateUsersDatabase = async (user, uid) => {
   if (typeof user !== "object") return;
 
-  const docRef = doc(database, `users`, uid);
-  await setDoc(docRef, { ...user.values, userId: uid });
+  const docRef = doc(database, "users", uid);
+  await setDoc(docRef, { ...user, userId: uid });
 };
 
 const createNewUser = async (user) => {
@@ -66,7 +66,6 @@ const createNewUser = async (user) => {
   );
 
   const userId = response.user.uid;
-
   await updateUsersDatabase(user, userId);
 };
 
@@ -90,8 +89,6 @@ const updateIndUserDatabase = async (user) => {
   try {
     const docRef = doc(database, "users", user.userId);
     await updateDoc(docRef, user);
-    const usersDetails = await getUsersFromDatabase(token.userDetails.uid);
-    return usersDetails;
   } catch (err) {
     console.log(err);
   }
@@ -101,8 +98,6 @@ const deleteIndUser = async (uid) => {
   try {
     const docRef = doc(database, "users", uid);
     await deleteDoc(docRef);
-    const usersDetails = await getUsersFromDatabase(token.userDetails.uid);
-    return usersDetails;
   } catch (err) {
     console.log(err);
   }
@@ -137,8 +132,6 @@ const updateIndProjectDatabase = async (project) => {
   try {
     const docRef = doc(database, "projects", project.projectId);
     await updateDoc(docRef, project);
-    const projects = await getProjectFromDatabase(token.userDetails.uid);
-    return projects;
   } catch (err) {
     console.log(err);
   }
@@ -148,8 +141,6 @@ const deleteIndProject = async (pid) => {
   try {
     const docRef = doc(database, "projects", pid);
     await deleteDoc(docRef);
-    const projects = await getProjectFromDatabase(token.userDetails.uid);
-    return projects;
   } catch (err) {
     console.log(err);
   }
