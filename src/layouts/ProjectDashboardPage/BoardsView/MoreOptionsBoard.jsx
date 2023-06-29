@@ -5,12 +5,9 @@ import {
   AppstoreOutlined,
 } from "@ant-design/icons";
 import { Menu, Tag } from "antd";
-import { useState } from "react";
 import style from "../style.module.css";
 import { Box, Typography } from "@mui/material";
-import { useParams } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { updateBoardProject } from "../../../redux/projectsSlice/projectsSlice";
+
 import { useUpdateBoardsMutation } from "../../../Helper/boardsMutations";
 
 function getItem(label, key, children, type) {
@@ -89,25 +86,14 @@ const boardColors = [
   },
 ];
 
-const MoreOptionsBoard = ({ id, label, itemsList }) => {
-  const { id: projectId } = useParams();
-  const dispatch = useDispatch();
-  const boardUpdateMutate = useUpdateBoardsMutation();
+const MoreOptionsBoard = ({ projectId,boardId, label, itemsList }) => {
+  const boardUpdateMutate = useUpdateBoardsMutation(projectId);
   const handleChangeColor = (color) => {
-    // const updatedBoard = {
-    //   id: id,
-    //   label: label.trim().length ? label : "Untitled",
-    //   itemsList: itemsList,
-    //   color: color.colorName,
-    //   bgcolor: color.backgroundColorName,
-    // };
-
     const updatedValues = {
       color: color.colorName,
       bgcolor: color.backgroundColorName,
     };
-
-    // boardUpdateMutate.mutate({ boardId: id, updatedValues });
+    boardUpdateMutate.mutate({ boardId, updatedValues });
   };
   return (
     <Box

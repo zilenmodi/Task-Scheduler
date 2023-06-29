@@ -7,9 +7,7 @@ import { Box, Typography } from "@mui/material";
 import style from "../style.module.css";
 import { CloseOutlined } from "@ant-design/icons";
 import { nanoid } from "@reduxjs/toolkit";
-import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
-import { useNavigate, useParams } from "react-router-dom";
 import {
   addNewTaskProject,
   updateBoardPositions,
@@ -182,7 +180,7 @@ function LeadsOverview({ projectWithId }) {
 
           buildAndSave(workValue);
           const projectDetails = {
-            projectId,
+            projectId: projectWithId.projectId,
             boards: workValue,
           };
           dispatch(updateBoardPositions(projectDetails));
@@ -280,7 +278,11 @@ function LeadsOverview({ projectWithId }) {
 
             {items.map((item, index) => {
               return (
-                <Draggable draggableId={item.id} key={item.id} index={index}>
+                <Draggable
+                  draggableId={item.boardId}
+                  key={item.boardId}
+                  index={index}
+                >
                   {(provided) => (
                     <Card
                       {...provided.draggableProps}
@@ -292,8 +294,9 @@ function LeadsOverview({ projectWithId }) {
                       className={style.board_columns}
                     >
                       <DroppableList
-                        key={item.id}
+                        key={item.boardId}
                         {...item}
+                        projectId={projectWithId?.projectId}
                         newtasksMap={newtasksMap}
                         handleAddnewTask={handleAddnewTask}
                       />

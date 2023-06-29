@@ -10,20 +10,20 @@ import { useNavigate, useParams } from "react-router-dom";
 import TaskCardKanban from "../../../components/TaskCardKanban/TaskCardKanban";
 
 function DroppableList({
-  id,
+  boardId,
   itemsList,
   label,
   handleAddnewTask,
   color,
   bgcolor,
   newtasksMap,
+  projectId,
 }) {
   const navigate = useNavigate();
   const [addTaskOpened, setAddTaskOpend] = useState(false);
   const [currentTaskInput, setCurrentTaskInput] = useState("");
-  const { id: pid } = useParams();
   return (
-    <Droppable droppableId={id}>
+    <Droppable droppableId={projectId}>
       {(provided, snapshot) => (
         <Box
           {...provided.droppableProps}
@@ -57,7 +57,12 @@ function DroppableList({
               placement="rightTop"
               title={null}
               content={
-                <MoreOptionsBoard id={id} label={label} itemsList={itemsList} />
+                <MoreOptionsBoard
+                  projectId={projectId}
+                  boardId={boardId}
+                  label={label}
+                  itemsList={itemsList}
+                />
               }
               trigger="click"
             >
@@ -117,10 +122,10 @@ function DroppableList({
                 return (
                   <li
                     className={style.boardItem}
-                    key={item?.id}
-                    onClick={() => navigate(`/tasks/${pid}/${item.id}`)}
+                    key={item?.boardId}
+                    onClick={() => navigate(`/tasks/${projectId}/${item.boardId}`)}
                   >
-                    <Draggable draggableId={item?.id} index={index}>
+                    <Draggable draggableId={item?.boardId} index={index}>
                       {(provided) => (
                         <TaskCardKanban provided={provided} item={item} />
                       )}

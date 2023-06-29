@@ -60,10 +60,6 @@ const ProjectDashboardPage = () => {
     }
   });
 
-  console.log(projectWithId);
-
-  // return <h1>Yes</h1>;
-
   return (
     <>
       <div className={style.container}>
