@@ -10,6 +10,7 @@ import style from "./style.module.css";
 
 const TaskMainSec = () => {
   const { taskDetails, setTaskDetails } = useContext(TaskContext);
+  console.log(taskDetails);
   return (
     <>
       <Box>
@@ -84,7 +85,7 @@ const TaskMainSec = () => {
               </Box>
             </Col>
           )}
-          {taskDetails.dates && (
+          {taskDetails?.dates?.length > 0 && (
             <Col>
               <Typography
                 variant="subtitle1"
@@ -105,10 +106,12 @@ const TaskMainSec = () => {
                 }}
               >
                 <Typography variant="subtitle1">
-                  Start Date: {taskDetails.dates[0].toString().slice(0, 16)}
+                  Start Date:{" "}
+                  {new Date(taskDetails.dates[0]).toString().slice(0, 15)}
                 </Typography>
                 <Typography variant="subtitle1">
-                  End Date: {taskDetails.dates[1].toString().slice(0, 16)}
+                  End Date:{" "}
+                  {new Date(taskDetails.dates[1]).toString().slice(0, 15)}
                 </Typography>
               </Box>
             </Col>

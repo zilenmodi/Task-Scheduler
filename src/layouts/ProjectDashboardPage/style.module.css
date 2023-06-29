@@ -57,7 +57,7 @@
 .board_columns {
   min-width: 280px;
   width: 280px;
-  max-height: 58vh;
+  max-height: 60vh;
   overflow: auto;
   height: fit-content;
 }

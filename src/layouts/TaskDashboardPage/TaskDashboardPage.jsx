@@ -9,48 +9,60 @@ import TaskMainSec from "./TaskMainSec";
 import { createContext } from "react";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
-import { updateTaskProject } from "../../redux/projectsSlice/projectsSlice";
 import { useEffect } from "react";
+import { getProjectFromDatabase } from "../../Helper/firebasedb";
+import { useQuery } from "@tanstack/react-query";
+import { useUpdateTasksMutation } from "../../Helper/tasksMutations";
+import { Timestamp } from "firebase/firestore";
 
 export const TaskContext = createContext();
 
 const TaskDashboardPage = () => {
+  const adminId = useSelector((state) => state.auth.userDetails.uid);
+  const {
+    data: projectsData,
+    error,
+    isLoading,
+  } = useQuery(["projects"], () => getProjectFromDatabase(adminId));
   const navigate = useNavigate();
-  const { tid: taskId } = useParams();
-  const projects = useSelector((state) => state.projects.projects);
+  const { tid: taskId, pid: projectId } = useParams();
   const dispatch = useDispatch();
-  const { pid: projectId } = useParams();
-  const [projectWithId] = projects?.filter(
-    (project) => project.projectId === projectId
-  );
+  const [taskDetails, setTaskDetails] = useState();
+  const updateTaskMutate = useUpdateTasksMutation(projectId);
 
-  const alltasks = projectWithId?.tasks;
-  const [taskWithId] = alltasks.filter((task) => task.id === taskId);
+  useEffect(() => {
+    if (!isLoading) {
+      const [projectWithId] = projectsData?.filter(
+        (project) => project?.projectId === projectId
+      );
+      const alltasks = projectWithId?.tasks;
+      const [taskWithId] = alltasks?.filter((task) => task.taskId === taskId);
 
-  const [taskDetails, setTaskDetails] = useState({
-    coverImage: taskWithId?.coverImage ?? "",
-    labelsList: taskWithId?.labelsList ?? [],
-    checklists: taskWithId?.checklists ?? [],
-    dates: taskWithId?.dates ?? null,
-    attachmentUrl: taskWithId?.attachmentUrl ?? "",
-    allLabelsList: taskWithId?.allLabelsList ?? [],
-    imageFileList: taskWithId?.imageFileList ?? [],
-    description: taskWithId?.description ?? "",
-  });
+      setTaskDetails({
+        taskId: taskWithId?.taskId,
+        label: taskWithId?.label,
+        coverImage: taskWithId?.coverImage ?? "",
+        labelsList: taskWithId?.labelsList ?? [],
+        checklists: taskWithId?.checklists ?? [],
+        dates: taskWithId?.dates ?? [],
+        attachmentUrl: taskWithId?.attachmentUrl ?? "",
+        allLabelsList: taskWithId?.allLabelsList ?? [],
+        imageFileList: taskWithId?.imageFileList ?? [],
+        description: taskWithId?.description ?? "",
+      });
+    }
+  }, [isLoading]);
 
   const handleSaveTask = () => {
-    const updatedtask = {
-      ...taskWithId,
-      ...taskDetails,
-    };
-    const projectDetails = {
-      projectId,
-      taskId,
-      updatedtask,
-    };
-    dispatch(updateTaskProject(projectDetails));
+    updateTaskMutate.mutate({ taskId, updatedValues: taskDetails });
     navigate(`/projects/${projectId}`);
   };
+
+  if (isLoading || taskDetails === undefined) {
+    return <h1>Loading...</h1>;
+  }
+  // console.log(taskDetails);
+  // return <h1>Loading...</h1>;
 
   return (
     <>
@@ -64,7 +76,7 @@ const TaskDashboardPage = () => {
             }}
           >
             <Typography variant="h5" className={style.project_title_heading}>
-              {taskWithId?.label}
+              {taskDetails?.label}
             </Typography>
             <Box>
               {/* <Button style={{ marginRight: "0.4rem" }}>

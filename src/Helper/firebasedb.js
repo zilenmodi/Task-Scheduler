@@ -183,6 +183,65 @@ const updateBoardInProject = async (pid, boardId, updatedValues) => {
   }
 };
 
+const updateBoardPositionInProject = async (pid, newBoardsPositions) => {
+  try {
+    const docRef = doc(database, "projects", pid);
+    await updateDoc(docRef, {
+      ["boards"]: newBoardsPositions,
+    });
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+const createNewTaskInBoard = async (pid, boardId, newTaskObject) => {
+  try {
+    const docRef = doc(database, "projects", pid);
+
+    const documentSnapshot = await getDoc(docRef);
+    const documentData = documentSnapshot.data();
+
+    const newArrayTasks = [...documentData["tasks"], newTaskObject];
+    const newArrayBoards = documentData["boards"].map((obj) => {
+      if (obj.boardId === boardId) {
+        return { ...obj, itemsList: [...obj.itemsList, newTaskObject.taskId] };
+      }
+      return obj;
+    });
+
+    await updateDoc(docRef, {
+      ["tasks"]: newArrayTasks,
+      ["boards"]: newArrayBoards,
+    });
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+const updateTaskInBoard = async (pid, taskId, updatedValues) => {
+  try {
+    const docRef = doc(database, "projects", pid);
+
+    const documentSnapshot = await getDoc(docRef);
+    const documentData = documentSnapshot.data();
+
+    const newArray = documentData["tasks"].map((obj) => {
+      if (obj.taskId === taskId) {
+        return { ...obj, ...updatedValues };
+      }
+      return obj;
+    });
+
+    console.log(newArray);
+
+    await updateDoc(docRef, {
+      ["tasks"]: newArray,
+    });
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 export {
   auth,
   database,
@@ -198,4 +257,7 @@ export {
   deleteIndProject,
   createNewBoardInProject,
   updateBoardInProject,
+  updateBoardPositionInProject,
+  createNewTaskInBoard,
+  updateTaskInBoard,
 };

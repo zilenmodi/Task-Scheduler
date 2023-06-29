@@ -1,6 +1,10 @@
 import { useMutation } from "@tanstack/react-query";
 import { queryClient } from "../lib/queryClient";
-import { createNewBoardInProject, updateBoardInProject } from "./firebasedb";
+import {
+  createNewBoardInProject,
+  updateBoardInProject,
+  updateBoardPositionInProject,
+} from "./firebasedb";
 
 export const useCreateBoardsMutation = (pid) => {
   return useMutation({
@@ -34,6 +38,24 @@ export const useUpdateBoardsMutation = (pid) => {
       });
 
       console.log("Board updated successfully !");
+    },
+  });
+};
+
+export const useUpdateBoardsPositionsMutation = (pid) => {
+  return useMutation({
+    mutationFn: async (body) => {
+      await updateBoardPositionInProject(pid, body);
+    },
+    onError: () => {
+      console.log("Boards position updated failed");
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["projects"],
+      });
+
+      console.log("Boards position updated successfully !");
     },
   });
 };

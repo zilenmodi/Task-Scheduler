@@ -8,13 +8,13 @@ import style from "../style.module.css";
 import { CloseOutlined } from "@ant-design/icons";
 import { nanoid } from "@reduxjs/toolkit";
 import { useDispatch } from "react-redux";
-import {
-  addNewTaskProject,
-  updateBoardPositions,
-} from "../../../redux/projectsSlice/projectsSlice";
 import DroppableList from "./BoardCard";
 import ErrorPageContainer from "../../../shared/containers/ErrorPageContainer/ErrorPageContainer";
-import { useCreateBoardsMutation } from "../../../Helper/boardsMutations";
+import {
+  useCreateBoardsMutation,
+  useUpdateBoardsPositionsMutation,
+} from "../../../Helper/boardsMutations";
+import { useCreateTasksMutation } from "../../../Helper/tasksMutations";
 
 const boardColors = [
   {
@@ -89,10 +89,16 @@ function LeadsOverview({ projectWithId }) {
   const [addBoardOpened, setAddBoardOpend] = useState(false);
   const [currentBoardInput, setCurrentBoardInput] = useState("");
   const dispatch = useDispatch();
+
   const createBoardMutate = useCreateBoardsMutation(projectWithId.projectId);
+  const updateBoardPosMutate = useUpdateBoardsPositionsMutation(
+    projectWithId.projectId
+  );
+  const createTaskMutate = useCreateTasksMutation(projectWithId.projectId);
+
   const newtasksMap = new Map();
   projectWithId?.tasks?.map((task) => {
-    newtasksMap.set(task.id, task);
+    newtasksMap.set(task.taskId, task);
   });
 
   useEffect(() => {
@@ -105,7 +111,7 @@ function LeadsOverview({ projectWithId }) {
     // const items = [];
     for (let i = 0; i < Object.keys(boards).length; ++i) {
       const currentGroup = boards[i];
-      groups[currentGroup.id] = i;
+      groups[currentGroup.boardId] = i;
     }
     // Set the data.
     setItems(boards);
@@ -114,32 +120,27 @@ function LeadsOverview({ projectWithId }) {
     setGroups(groups);
   }
 
-  const handleAddnewTask = (id, title) => {
+  const handleAddnewTask = (boardId, title) => {
     const newTask = {
-      id: nanoid(),
+      taskId: nanoid(),
       label: title.trim().length ? title : "Untitled",
     };
-    const projectDetails = {
-      projectId,
-      boardId: id,
-      newTask,
-    };
-    dispatch(addNewTaskProject(projectDetails));
+    createTaskMutate.mutate({ boardId, newTask });
 
-    const newItems = items.map((item) => {
-      if (item.id === id) {
-        return {
-          ...item,
-          itemsList: [
-            ...item.itemsList,
-            { id: nanoid(), label: title.trim().length ? title : "Untitled" },
-          ],
-        };
-      }
-      return item;
-    });
+    // const newItems = items.map((item) => {
+    //   if (item.id === id) {
+    //     return {
+    //       ...item,
+    //       itemsList: [
+    //         ...item.itemsList,
+    //         { id: nanoid(), label: title.trim().length ? title : "Untitled" },
+    //       ],
+    //     };
+    //   }
+    //   return item;
+    // });
 
-    setItems(newItems);
+    // setItems(newItems);
   };
 
   const handleAddnewBoard = (title) => {
@@ -179,16 +180,13 @@ function LeadsOverview({ projectWithId }) {
           workValue.splice(targetIndex, 0, deletedItem);
 
           buildAndSave(workValue);
-          const projectDetails = {
-            projectId: projectWithId.projectId,
-            boards: workValue,
-          };
-          dispatch(updateBoardPositions(projectDetails));
+          updateBoardPosMutate.mutate(workValue);
           return;
         }
 
         const sourceDroppableIndex = groups[source.droppableId];
         const targetDroppableIndex = groups[destination.droppableId];
+        console.log(groups, source.droppableId, destination.droppableId);
         const sourceItems = items[sourceDroppableIndex].itemsList.slice();
         const targetItems =
           source.droppableId !== destination.droppableId
@@ -210,12 +208,7 @@ function LeadsOverview({ projectWithId }) {
         };
 
         setItems(workValue);
-        const projectDetails = {
-          projectId,
-          boards: workValue,
-        };
-        dispatch(updateBoardPositions(projectDetails));
-        console.log(workValue);
+        updateBoardPosMutate.mutate(workValue);
       }}
     >
       <Droppable

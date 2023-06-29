@@ -24,10 +24,10 @@ const TaskSideBar = () => {
         </Typography>
         <Box className={style.taskSidebar_box}>
           <TaskModalLabels />
-          {/* <div className={style.taskSidebar_box_btn}>
+          <div className={style.taskSidebar_box_btn}>
             <CheckSquareOutlined />
             <Typography fontSize={"0.9rem"}>Checklist</Typography>
-          </div> */}
+          </div>
 
           <TaskModalDate />
 

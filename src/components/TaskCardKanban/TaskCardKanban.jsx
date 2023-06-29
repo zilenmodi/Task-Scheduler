@@ -58,11 +58,11 @@ const TaskCardKanban = ({ provided, item }) => {
             </Box>
           )}
 
-          {item?.dates && (
+          {item?.dates?.length > 0 && (
             <Box className={style.taskcard_box_btn}>
               <Typography fontSize={"0.9rem"} color={"#172b4d"}>
                 <ClockCircleOutlined style={{ marginRight: "0.5rem" }} />{" "}
-                {item?.dates[0].toString().slice(0, 10)}
+                {new Date(item?.dates[1]).toString().slice(0, 16)}
               </Typography>
             </Box>
           )}

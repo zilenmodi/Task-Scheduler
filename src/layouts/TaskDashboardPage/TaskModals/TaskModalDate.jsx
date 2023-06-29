@@ -24,8 +24,10 @@ const TaskModalDateContent = ({ hide, dates, setDates }) => {
             Choose Date
           </Typography>
           <RangePicker
-            defaultValue={dayjs(dates)}
-            onChange={(value) => setDates(value)}
+            defaultValue={dates}
+            onChange={(value) =>
+              setDates([value[0]["$d"].getTime(), value[1]["$d"].getTime()])
+            }
           />
         </Box>
         <Box sx={{ mt: 2 }}>
@@ -43,10 +45,18 @@ const TaskModalDateContent = ({ hide, dates, setDates }) => {
   );
 };
 
+const timeStampToObject = (date) => {
+  if (!date) return null;
+  return dayjs(new Date(date));
+};
+
 const TaskModalDate = () => {
   const { taskDetails, setTaskDetails } = useContext(TaskContext);
   const [open, setOpen] = useState(false);
-  const [dates, setDates] = useState(taskDetails.dates);
+  const [dates, setDates] = useState([
+    timeStampToObject(taskDetails?.dates[0]),
+    timeStampToObject(taskDetails?.dates[1]),
+  ]);
 
   const hide = (actionType) => {
     if (actionType === "save") {

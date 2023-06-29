@@ -23,7 +23,7 @@ function DroppableList({
   const [addTaskOpened, setAddTaskOpend] = useState(false);
   const [currentTaskInput, setCurrentTaskInput] = useState("");
   return (
-    <Droppable droppableId={projectId}>
+    <Droppable droppableId={boardId}>
       {(provided, snapshot) => (
         <Box
           {...provided.droppableProps}
@@ -94,7 +94,7 @@ function DroppableList({
                   type="primary"
                   style={{ marginRight: "1rem" }}
                   onClick={() => {
-                    handleAddnewTask(id, currentTaskInput);
+                    handleAddnewTask(boardId, currentTaskInput);
                     setAddTaskOpend(false);
                     setCurrentTaskInput("");
                   }}
@@ -122,10 +122,12 @@ function DroppableList({
                 return (
                   <li
                     className={style.boardItem}
-                    key={item?.boardId}
-                    onClick={() => navigate(`/tasks/${projectId}/${item.boardId}`)}
+                    key={item?.taskId}
+                    onClick={() =>
+                      navigate(`/tasks/${projectId}/${item.taskId}`)
+                    }
                   >
-                    <Draggable draggableId={item?.boardId} index={index}>
+                    <Draggable draggableId={item?.taskId} index={index}>
                       {(provided) => (
                         <TaskCardKanban provided={provided} item={item} />
                       )}
